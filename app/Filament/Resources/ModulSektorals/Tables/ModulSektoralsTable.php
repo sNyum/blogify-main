@@ -1,39 +1,43 @@
 <?php
 
-namespace App\Filament\Resources\Beritas\Tables;
+namespace App\Filament\Resources\ModulSektorals\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Table;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Table;
 
-class BeritasTable
+class ModulSektoralsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('foto')
-                    ->label('Foto')
-                    ->circular(false),
-
                 TextColumn::make('judul')
                     ->label('Judul')
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('konten')
-                    ->label('Konten')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('deskripsi')
+                    ->label('Deskripsi')
                     ->limit(50),
+                ImageColumn::make('cover')
+                    ->label('Cover')
+                    ->circular(false),
+                TextColumn::make('created_at')
+                    ->label('Dibuat')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
-            // ->defaultSort('created_at', 'desc')
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
@@ -43,6 +47,5 @@ class BeritasTable
                     DeleteBulkAction::make(),
                 ]),
             ]);
-
     }
 }

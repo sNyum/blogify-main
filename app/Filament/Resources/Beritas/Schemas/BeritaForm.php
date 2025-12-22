@@ -21,11 +21,8 @@ class BeritaForm
                     ->columnSpanFull(),
 
                 FileUpload::make('foto')
-                    ->image()
-                    ->directory('berita')
-                    ->disk('public')
-                    ->maxSize(2048)
-                    ->imagePreviewHeight('150'),
+                    ->nullable()
+                    ->image(),
             ]);
     }
 }

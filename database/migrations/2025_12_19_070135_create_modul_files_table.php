@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('berita', function (Blueprint $table) {
-            $table->string('foto')->nullable(); // kolom untuk nama file foto
-        });
+        Schema::create('modul_files', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('modul_sektoral_id')->constrained()->cascadeOnDelete();
+    $table->string('judul');
+    $table->string('file');
+    $table->integer('urutan')->default(1);
+    $table->timestamps();
+});
+
     }
 
     /**
@@ -21,8 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('berita', function (Blueprint $table) {
-            $table->dropColumn('foto');
-        });
+        Schema::dropIfExists('modul_files');
     }
 };

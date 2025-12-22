@@ -8,10 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('berita', function (Blueprint $table) {
+        Schema::create('beritas', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
             $table->text('konten');
+            $table->text('foto')->nullable();
             $table->timestamps();
         });
     }

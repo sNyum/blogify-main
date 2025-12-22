@@ -19,6 +19,5 @@ class AdminSeeder extends Seeder
         'email' => 'admin@mail.com',
         'password' => Hash::make('admin123'),
     ]);
-      $this->call(AdminSeeder::class);
     }
 }

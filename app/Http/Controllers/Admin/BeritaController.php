@@ -32,6 +32,6 @@ class BeritaController extends Controller
 
         Berita::create($data);
 
-        return redirect()->back()->with('success', 'Berita berhasil ditambahkan');
+        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan');
     }
 }
