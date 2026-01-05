@@ -16,10 +16,8 @@ class ModulSektoralController extends Controller
 
     public function show($slug)
     {
-        $modul = ModulSektoral::where('slug', $slug)
-            ->with(['files' => fn ($q) => $q->orderBy('urutan')])
-            ->firstOrFail();
+        $modul = ModulSektoral::where('slug', $slug)->firstOrFail();
 
-        return view('modul.show', compact('modul'));
+        return view('modul-sektoral.show', compact('modul'));
     }
 }

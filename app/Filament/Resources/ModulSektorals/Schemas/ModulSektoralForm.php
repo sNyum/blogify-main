@@ -30,11 +30,13 @@ class ModulSektoralForm
     ->dehydrated(),   // TETAP disimpan ke database
                 Textarea::make('deskripsi')
                     ->nullable(),
-                FileUpload::make('cover')
-                    ->nullable()
-                    ->image()
+
+                FileUpload::make('attachment_file')
+                    ->label('File Presentasi (PPT/PDF)')
+                    ->acceptedFileTypes(['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'])
                     ->disk('public')
-                    ->directory('modul-sektoral-covers'),
+                    ->directory('modul-sektoral-files')
+                    ->columnSpanFull(),
             ]);
     }
 }

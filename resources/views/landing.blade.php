@@ -77,27 +77,19 @@
                 </p>
             </div>
 
-            <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @forelse($modulSektoral as $item)
-                    <div class="flex flex-col rounded-2xl shadow-lg shadow-gray-200/50 overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-                        <div class="flex-shrink-0 h-48 bg-gray-100 relative">
-                            @if($item->cover)
-                                <img class="h-full w-full object-cover" src="{{ asset('storage/' . $item->cover) }}" alt="{{ $item->judul }}">
-                            @else
-                                <div class="flex items-center justify-center h-full text-gray-400">
-                                    <svg class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                                </div>
-                            @endif
+                    <a href="/modul-sektoral/{{ $item->slug }}" class="group relative bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:border-blue-200 transition-all duration-300 flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                         </div>
-                        <div class="flex-1 p-6 flex flex-col justify-between">
-                            <div class="flex-1">
-                                <a href="/modul-sektoral/{{ $item->slug }}" class="block mt-2">
-                                    <p class="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">{{ $item->judul }}</p>
-                                    <p class="mt-3 text-base text-gray-500 line-clamp-3">{{ $item->deskripsi }}</p>
-                                </a>
-                            </div>
+                        <div class="ml-4 flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">{{ $item->judul }}</h3>
                         </div>
-                    </div>
+                        <div class="ml-2">
+                             <svg class="h-5 w-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </div>
+                    </a>
                 @empty
                     <div class="col-span-full text-center py-12">
                         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
@@ -131,26 +123,33 @@
                  @forelse($berita as $news)
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
                          <div class="h-48 bg-gray-200 relative">
-                             @if($news->foto)
-                                <img class="h-full w-full object-cover" src="{{ asset('storage/' . $news->foto) }}" alt="{{ $news->judul }}">
-                            @else
-                                <div class="flex items-center justify-center h-full text-gray-400">
-                                     <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                </div>
-                            @endif
+                             @if($news->youtube_url)
+                                 <a href="{{ $news->youtube_url }}" target="_blank" class="block h-full w-full">
+                             @endif
+                                 @if($news->foto)
+                                    <img class="h-full w-full object-cover" src="{{ asset('storage/' . $news->foto) }}" alt="{{ $news->judul }}">
+                                @else
+                                    <div class="flex items-center justify-center h-full text-gray-400">
+                                         <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    </div>
+                                @endif
+                             @if($news->youtube_url)
+                                 </a>
+                             @endif
                          </div>
                         <div class="p-6">
                             <div class="text-sm text-gray-500 mb-2">
                                 <time datetime="{{ $news->created_at }}">{{ $news->created_at->format('d M Y') }}</time>
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                                <a href="#" class="hover:text-blue-600 transition-colors">{{ $news->judul }}</a>
+                                <a href="{{ $news->youtube_url ?? '#' }}" {{ $news->youtube_url ? 'target=_blank' : '' }} class="hover:text-blue-600 transition-colors">{{ $news->judul }}</a>
                             </h3>
                             <div class="text-gray-600 text-sm line-clamp-3 mb-4">
                                 {!! Str::limit(strip_tags($news->konten), 100) !!}
                             </div>
-                            <a href="#" class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500">
-                                Baca selengkapnya
+                            <a href="{{ $news->youtube_url ?? '#' }}" {{ $news->youtube_url ? 'target=_blank' : '' }} class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500">
+                                Tonton Video
+                                <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             </a>
                         </div>
                     </div>

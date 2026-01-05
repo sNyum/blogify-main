@@ -25,6 +25,13 @@ class BeritaForm
                     ->image()
                     ->disk('public')
                     ->directory('berita-images'),
+
+                Forms\Components\TextInput::make('youtube_url')
+                    ->label('Link YouTube (Opsional)')
+                    ->url()
+                    ->placeholder('https://www.youtube.com/watch?v=...')
+                    ->nullable()
+                    ->maxLength(255),
             ]);
     }
 }

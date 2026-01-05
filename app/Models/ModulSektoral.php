@@ -12,6 +12,12 @@ class ModulSektoral extends Model
         'slug',
         'deskripsi',
         'cover',
+        'slider_images',
+        'attachment_file',
+    ];
+
+    protected $casts = [
+        'slider_images' => 'array',
     ];
 
     public function files(): HasMany
