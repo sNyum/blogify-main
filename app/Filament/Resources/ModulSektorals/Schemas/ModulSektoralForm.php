@@ -32,7 +32,9 @@ class ModulSektoralForm
                     ->nullable(),
                 FileUpload::make('cover')
                     ->nullable()
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('modul-sektoral-covers'),
             ]);
     }
 }

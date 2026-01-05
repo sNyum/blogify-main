@@ -22,7 +22,9 @@ class BeritaForm
 
                 FileUpload::make('foto')
                     ->nullable()
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('berita-images'),
             ]);
     }
 }
