@@ -48,74 +48,81 @@ class ChatbotController extends Controller
             $knowledgeBase . "\n\n" .
             "CONSTRAINT: Jika jawaban tidak ada di Context, arahkan user ke kontak BPS. Jangan mengarang data.";
 
-        // Format for Gemini API
-        // We will inject the system prompt as the very first 'user' part to ensure compatibility
         $contents = [];
-        
-        // 1. Add System Prompt
-        $contents[] = [
-            'role' => 'user',
-            'parts' => [['text' => $systemPrompt]]
-        ];
+        $contents[] = ['role' => 'user', 'parts' => [['text' => $systemPrompt]]];
+        $contents[] = ['role' => 'model', 'parts' => [['text' => 'Mengerti. Saya siap membantu sebagai Asisten CERDAS BPS Batanghari.']]];
 
-        // 2. Add Model Acknowledgement (to prime the conversation)
-        $contents[] = [
-            'role' => 'model',
-            'parts' => [['text' => 'Mengerti. Saya siap membantu sebagai Asisten CERDAS BPS Batanghari.']]
-        ];
-
-        // 3. Add History
         foreach ($history as $msg) {
             $role = $msg['role'] === 'user' ? 'user' : 'model';
-            $contents[] = [
-                'role' => $role,
-                'parts' => [['text' => $msg['content']]]
-            ];
+            $contents[] = ['role' => $role, 'parts' => [['text' => $msg['content']]]];
         }
 
-        // 4. Add Current Message
-        $contents[] = [
-            'role' => 'user',
-            'parts' => [['text' => $userMessage]]
+        $contents[] = ['role' => 'user', 'parts' => [['text' => $userMessage]]];
+
+        // Configuration for Google Search (Grounding)
+        $tools = [
+            [
+                'googleSearch' => (object)[] // Empty object for standard google search
+            ]
         ];
 
         try {
-            // Log::info('Sending request to Gemini: ' . $this->apiUrl); 
-            
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post($this->apiUrl . '?key=' . $this->apiKey, [
-                'contents' => $contents,
-                'generationConfig' => [
-                    'temperature' => 0.7,
-                    'topK' => 40,
-                    'topP' => 0.95,
-                    'maxOutputTokens' => 1024,
-                ]
-            ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memahami respons.';
-                
-                return response()->json([
-                    'reply' => $reply,
-                    'status' => 'success'
+            // Attempt 1: Try with Google Search
+            $response = Http::withHeaders(['Content-Type' => 'application/json'])
+                ->post($this->apiUrl . '?key=' . $this->apiKey, [
+                    'contents' => $contents,
+                    'tools' => $tools,
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'topK' => 40,
+                        'topP' => 0.95,
+                        'maxOutputTokens' => 1024,
+                    ]
                 ]);
-            } else {
-                Log::error('Gemini API Error (' . $response->status() . '): ' . $response->body());
-                return response()->json([
-                    'reply' => 'Maaf, terjadi masalah koneksi ke AI. Silakan coba lagi.',
-                    'status' => 'error',
-                    'debug' => $response->body()
-                ], 502);
+
+            if (!$response->successful()) {
+                throw new \Exception('API Error with Tools: ' . $response->body());
             }
+
+            $data = $response->json();
+            $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memahami respons.';
+            
+            return response()->json(['reply' => $reply, 'status' => 'success']);
+
         } catch (\Exception $e) {
-            Log::error('Chatbot Exception: ' . $e->getMessage());
-            return response()->json([
-                'reply' => 'Maaf, terjadi kesalahan sistem.',
-                'status' => 'error'
-            ], 500);
+            // Log the error but don't fail yet
+            Log::warning('Chatbot Search Tool Failed, retrying without tools. Error: ' . $e->getMessage());
+
+            // Attempt 2: Fallback without tools (Standard text generation)
+            try {
+                $response = Http::withHeaders(['Content-Type' => 'application/json'])
+                    ->post($this->apiUrl . '?key=' . $this->apiKey, [
+                        'contents' => $contents,
+                        // No tools here
+                        'generationConfig' => [
+                            'temperature' => 0.7,
+                            'topK' => 40,
+                            'topP' => 0.95,
+                            'maxOutputTokens' => 1024,
+                        ]
+                    ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memahami respons.';
+                    return response()->json(['reply' => $reply, 'status' => 'success']);
+                } else {
+                    Log::error('Gemini API Fallback Error: ' . $response->body());
+                    return response()->json([
+                        'reply' => 'Maaf, saat ini saya mengalami gangguan koneksi. Mohon coba lagi nanti.',
+                        'status' => 'error',
+                        'debug' => $response->body()
+                    ], 502);
+                }
+            } catch (\Exception $ex) {
+                Log::error('Chatbot Fatal Error: ' . $ex->getMessage());
+                return response()->json(['reply' => 'Terjadi kesalahan sistem fatal.', 'status' => 'error'], 500);
+            }
         }
     }
 }
