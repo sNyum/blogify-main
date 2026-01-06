@@ -36,6 +36,7 @@ class ModulSektoralForm
                     ->acceptedFileTypes(['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'])
                     ->disk('public')
                     ->directory('modul-sektoral-files')
+                    ->maxSize(102400) // 100 MB
                     ->columnSpanFull(),
             ]);
     }

@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $modul->judul }} - BPS Kabupaten Batanghari</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- Alpine.js for Carousel -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen font-sans antialiased">
+<body class="bg-gray-50 h-screen overflow-hidden font-sans antialiased">
 
-    <!-- Navbar (Reuse simplified version or include component if available) -->
-    <!-- For consistency, we'll implement a simple back button header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <!-- Header - Fixed Height -->
+    <header class="bg-white shadow-sm z-20 relative h-16 flex-shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
             <a href="/" class="flex items-center text-blue-900 hover:text-blue-700 transition">
-                <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                <span class="font-medium">Kembali ke Beranda</span>
+                <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                <span class="font-medium text-sm">Kembali ke Beranda</span>
             </a>
             <img class="h-10 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="BPS Batanghari">
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <!-- Main Content - Calculated Height (100vh - header - footer) -->
+    <main class="w-full max-w-[99%] mx-auto px-2" style="height: calc(100vh - 4rem - 2rem);">
         
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden h-[85vh] min-h-[600px] flex flex-col border border-gray-100">
+        <!-- Card Container - Takes Full Height of Main -->
+        <div class="bg-white rounded-xl shadow-2xl overflow-hidden h-full flex flex-col border border-gray-100 relative my-2">
             <div class="flex flex-col lg:flex-row h-full">
                 <!-- Left: Viewer (Iframe) - Larger Area -->
                 <div class="w-full lg:w-[80%] h-full bg-gray-50 border-r border-gray-200 relative group flex flex-col">
@@ -68,7 +69,7 @@
                 </div>
 
                 <!-- Right: Title & Actions - Sleek Sidebar -->
-                <div class="w-full lg:w-[20%] bg-white flex flex-col p-6 lg:p-8">
+                <div class="w-full lg:w-[20%] bg-white flex flex-col p-6 overflow-y-auto">
                     
                     <!-- Content Group -->
                     <div>
@@ -83,7 +84,7 @@
                         </h1>
                         
                         @if($modul->deskripsi)
-                            <div class="mt-4 prose prose-sm text-gray-500 leading-relaxed line-clamp-[10]">
+                            <div class="mt-4 prose prose-sm text-gray-500 leading-relaxed">
                                 {{ $modul->deskripsi }}
                             </div>
                         @endif
@@ -93,7 +94,7 @@
                     <div class="mt-auto pt-8">
                         @if($modul->attachment_file)
                             <a href="{{ asset('storage/' . $modul->attachment_file) }}" target="_blank" class="flex items-center justify-center w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-200 hover:shadow-blue-300 transition-all duration-300 transform group hover:-translate-y-0.5">
-                                <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                                 Download Materi
                             </a>
                         @else
@@ -111,11 +112,13 @@
                 </div>
             </div>
         </div>
+    </main>
 
-        <!-- Footer (Simple) -->
-        <div class="mt-12 text-center text-gray-500 text-sm">
+    <!-- Footer - Fixed at Bottom -->
+    <footer class="h-8 flex-shrink-0 flex items-center justify-center bg-gray-50">
+        <div class="text-center text-gray-400 text-xs">
             &copy; {{ date('Y') }} Badan Pusat Statistik Kabupaten Batanghari. All rights reserved.
         </div>
-    </main>
+    </footer>
 </body>
 </html>

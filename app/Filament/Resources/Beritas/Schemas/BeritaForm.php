@@ -27,9 +27,15 @@ class BeritaForm
                     ->directory('berita-images'),
 
                 Forms\Components\TextInput::make('youtube_url')
-                    ->label('Link YouTube (Opsional)')
+                    ->label('Link Sumber / YouTube (Opsional)')
                     ->url()
-                    ->placeholder('https://www.youtube.com/watch?v=...')
+                    ->placeholder('https://...')
+                    ->nullable()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('channel_name')
+                    ->label('Nama Sumber / Channel')
+                    ->placeholder('Contoh: Detik.com, BPS Batanghari')
                     ->nullable()
                     ->maxLength(255),
             ]);

@@ -13,3 +13,6 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/modul-sektoral', [ModulSektoralController::class, 'index']);
 Route::get('/modul-sektoral/{slug}', [ModulSektoralController::class, 'show']);
+Route::get('/berita', [App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
+Route::get('/pustaka', [App\Http\Controllers\PustakaController::class, 'index'])->name('pustaka.index');
+Route::post('/chatbot/chat', [App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');

@@ -9,5 +9,5 @@ class Berita extends Model
 
    protected $table = 'beritas';
 
-    protected $fillable = ['judul', 'konten', 'foto', 'youtube_url'];
+    protected $fillable = ['judul', 'konten', 'foto', 'youtube_url', 'channel_name'];
 }

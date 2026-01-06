@@ -10,6 +10,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -72,6 +73,7 @@ class PustakaResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
+                DeleteAction::make(),
                 Action::make('view_pdf')
                     ->label('View PDF')
                     ->icon('heroicon-o-eye')
