@@ -8,7 +8,7 @@ class ModulSektoralController extends Controller
 {
     public function index()
     {
-        $moduls = ModulSektoral::orderBy('judul')->paginate(9);
+        $moduls = ModulSektoral::latest()->paginate(9);
         // dd($moduls);
 
         return view('modul-sektoral.index', compact('moduls'));

@@ -173,6 +173,12 @@
     </button>
 </div>
 
+</div>
+
+<!-- External Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
 <script>
     function chatbot() {
         return {
@@ -275,6 +281,7 @@
                     // Format response (simple markdown to HTML conversion)
                     let formattedReply = rawReply
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-600 hover:underline">$1</a>') // Links
                         .replace(/\n/g, '<br>'); // Newlines
 
                     // Push Bot Message with structured data

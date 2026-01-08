@@ -43,15 +43,9 @@ class ChatMessage extends Model
     /**
      * Get the sender (polymorphic).
      */
-    public function sender()
+    public function sender(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
-        if ($this->sender_type === 'user') {
-            return $this->belongsTo(ExternalUser::class, 'sender_id');
-        } elseif ($this->sender_type === 'admin') {
-            return $this->belongsTo(User::class, 'sender_id');
-        }
-        
-        return null;
+        return $this->morphTo();
     }
 
     /**

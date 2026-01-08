@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Services\DeepSeekService;
+use App\Services\BPSSearchService;
 
 class ChatbotController extends Controller
 {
-    private $apiKey;
-    private $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+    private $deepSeekService;
+    private $bpsSearchService;
 
-    public function __construct()
+    public function __construct(DeepSeekService $deepSeekService, BPSSearchService $bpsSearchService)
     {
-        $this->apiKey = trim(env('GEMINI_API_KEY', ''));
+        $this->deepSeekService = $deepSeekService;
+        $this->bpsSearchService = $bpsSearchService;
     }
 
     public function chat(Request $request)
@@ -26,14 +28,6 @@ class ChatbotController extends Controller
         $userMessage = $request->input('message');
         $history = $request->input('history', []);
 
-        if (empty($this->apiKey)) {
-            Log::error('Gemini API Key is missing');
-            return response()->json([
-                'reply' => 'Maaf, sistem sedang dalam konfigurasi (API Key hilang).',
-                'status' => 'error'
-            ], 500);
-        }
-
         // Load knowledge base
         $knowledgeBase = '';
         $kbPath = resource_path('chatbot/knowledge_base.txt');
@@ -41,64 +35,48 @@ class ChatbotController extends Controller
             $knowledgeBase = file_get_contents($kbPath);
         }
 
+        // Perform BPS Search
+        // We always search to provide up-to-date context, or we could condition it
+        $searchResults = $this->bpsSearchService->search($userMessage);
+
         // Prepare system prompt
         $systemPrompt = "ROLE: Anda adalah 'Asisten CERDAS', chatbot resmi BPS Kabupaten Batanghari.\n" .
-            "INSTRUCTION: Jawab pertanyaan dalam Bahasa Indonesia yang sopan dan profesional.\n" .
-            "CONTEXT: Gunakan informasi berikut sebagai referensi utama:\n" .
+            "INSTRUCTION: Jawab pertanyaan dalam Bahasa Indonesia yang sopan, profesional, dan BERBASIS DATA.\n" .
+            "CONTEXT (INTERNAL KNOWLEDGE):\n" .
             $knowledgeBase . "\n\n" .
+            "CONTEXT (REAL-TIME SEARCH RESULTS):\n" .
+            $searchResults . "\n\n" . // Inject Search Results Here
             "FORMATTING RULES (PENTING):\n" .
             "1. Jika user meminta VISUALISASI DATA / GRAFIK, berikan data JSON khusus di akhir respon dengan format:\n" .
             "   [[CHART:{\"type\":\"bar\",\"labels\":[\"A\",\"B\"],\"data\":[10,20],\"title\":\"Judul Grafik\"}]]\n" .
             "   (Gunakan type: 'bar' atau 'line' atau 'pie').\n\n" .
             "2. Jika user meminta DOWNLOAD DATA / TABEL EXCEL, berikan data JSON khusus di akhir respon dengan format:\n" .
             "   [[TABLE:{\"columns\":[\"Kolom1\",\"Kolom2\"],\"rows\":[[\"Data1\",10],[\"Data2\",20]],\"title\":\"Nama File\"}]]\n\n" .
-            "CONSTRAINT: Jika jawaban tidak ada di Context, arahkan user ke kontak BPS. Jangan mengarang data.";
+            "CONSTRAINT: Gunakan informasi dari Context (Knowledge Base atau Search Results) sebagai prioritas. Jika tidak ada info, arahkan ke website BPS. Jangan mengarang data.";
 
-        $contents = [];
-        $contents[] = ['role' => 'user', 'parts' => [['text' => $systemPrompt]]];
-        $contents[] = ['role' => 'model', 'parts' => [['text' => 'Mengerti. Saya siap menampilkan grafik dan tabel data jika diminta.']]];
-
+        // Construct Messages Array for DeepSeek (OpenAI compatible)
+        $messages = [];
+        $messages[] = ['role' => 'system', 'content' => $systemPrompt];
+        
+        // Add History
         foreach ($history as $msg) {
             // Skip if message doesn't have required fields
             if (!isset($msg['text']) || !isset($msg['isUser'])) {
                 continue;
             }
             
-            $role = $msg['isUser'] ? 'user' : 'model';
-            $contents[] = ['role' => $role, 'parts' => [['text' => $msg['text']]]];
+            $role = $msg['isUser'] ? 'user' : 'assistant'; // OpenAI uses 'assistant', Gemini used 'model'
+            $messages[] = ['role' => $role, 'content' => $msg['text']];
         }
 
-        $contents[] = ['role' => 'user', 'parts' => [['text' => $userMessage]]];
-
-        // Configuration for Google Search (Grounding)
-        $tools = [
-            [
-                'googleSearch' => (object)[] // Empty object for standard google search
-            ]
-        ];
+        // Add Current User Message
+        $messages[] = ['role' => 'user', 'content' => $userMessage];
 
         try {
-            // Attempt 1: Try with Google Search
-            $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->apiUrl . '?key=' . $this->apiKey, [
-                    'contents' => $contents,
-                    'tools' => $tools,
-                    'generationConfig' => [
-                        'temperature' => 0.7,
-                        'topK' => 40,
-                        'topP' => 0.95,
-                        'maxOutputTokens' => 1024,
-                    ]
-                ]);
+            // Call DeepSeek Service
+            $reply = $this->deepSeekService->generateResponse($messages);
 
-            if (!$response->successful()) {
-                throw new \Exception('API Error with Tools: ' . $response->body());
-            }
-
-            $data = $response->json();
-            $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memahami respons.';
-            
-            // CUSTOM LOGIC: Inject Population Data if requested
+            // CUSTOM LOGIC: Inject Population Data if requested (Same logic as before)
             if (stripos(strtolower($userMessage), 'penduduk') !== false && stripos(strtolower($userMessage), 'batanghari') !== false) {
                 // Table Data Structure matching chatbot.blade.php expectation
                 $tableData = [
@@ -139,39 +117,8 @@ class ChatbotController extends Controller
             return response()->json(['reply' => $reply, 'status' => 'success']);
 
         } catch (\Exception $e) {
-            // Log the error but don't fail yet
-            Log::warning('Chatbot Search Tool Failed, retrying without tools. Error: ' . $e->getMessage());
-
-            // Attempt 2: Fallback without tools (Standard text generation)
-            try {
-                $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                    ->post($this->apiUrl . '?key=' . $this->apiKey, [
-                        'contents' => $contents,
-                        // No tools here
-                        'generationConfig' => [
-                            'temperature' => 0.7,
-                            'topK' => 40,
-                            'topP' => 0.95,
-                            'maxOutputTokens' => 1024,
-                        ]
-                    ]);
-
-                if ($response->successful()) {
-                    $data = $response->json();
-                    $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memahami respons.';
-                    return response()->json(['reply' => $reply, 'status' => 'success']);
-                } else {
-                    Log::error('Gemini API Fallback Error: ' . $response->body());
-                    return response()->json([
-                        'reply' => 'Maaf, saat ini saya mengalami gangguan koneksi. Mohon coba lagi nanti.',
-                        'status' => 'error',
-                        'debug' => $response->body()
-                    ], 502);
-                }
-            } catch (\Exception $ex) {
-                Log::error('Chatbot Fatal Error: ' . $ex->getMessage());
-                return response()->json(['reply' => 'Terjadi kesalahan sistem fatal.', 'status' => 'error'], 500);
-            }
+            Log::error('Chatbot Fatal Error: ' . $e->getMessage());
+            return response()->json(['reply' => 'Terjadi kesalahan sistem fatal.', 'status' => 'error'], 500);
         }
     }
 }
