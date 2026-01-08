@@ -1,70 +1,96 @@
-# Blogify Admin
+# Blogify - Sistem Informasi & Layanan Publik
 
-Admin panel untuk mengelola **Berita** menggunakan **Laravel** dan **Filament v4**.  
-Project ini fokus pada sisi **admin (CMS)**, bukan frontend user.
+Platform **Blogify** adalah aplikasi web modern yang dibangun menggunakan **Laravel 12** dan **Filament v4**. Sistem ini tidak hanya berfungsi sebagai admin panel untuk pengelolaan berita, tetapi juga dilengkapi dengan dashboard pengguna, layanan publik, dan **sistem live chat real-time**.
 
-## Fitur
-- CRUD Berita
-- Upload foto berita
-- Preview gambar di tabel
-- Sorting berita terbaru
-- Dashboard admin (Filament)
-- SQLite / MySQL ready
+## 🚀 Fitur Utama
 
-## Tech Stack
-- PHP 8.2+
-- Laravel
-- Filament v4
-- SQLite / MySQL
-- Tailwind (via Filament)
+### 1. Panel Admin (Filament)
+- **Dashboard Analitik**: Statistik ringkas untuk monitoring konten.
+- **Manajemen Berita**: CRUD lengkap, upload gambar dengan preview, dan publikasi konten.
+- **Manajemen Pustaka/Dokumen**: Upload dan pengelolaan file publik.
+- **Manajemen User**: Pengelolaan pengguna dan hak akses.
+- **Moderasi Chat**: Memantau dan membalas pesan dari pengguna melalui fitur live chat.
 
-## Instalasi
+### 2. User Dashboard & Layanan
+- **Halaman Depan (Landing Page)**: Desain modern untuk akses publik.
+- **Dashboard Pengguna**: Area khusus untuk pengguna terdaftar melihat status layanan.
+- **Live Chat Real-time**: Komunikasi langsung antara pengguna dan admin menggunakan **Laravel Reverb**.
+- **Fitur AI Chatbot**: Asisten virtual cerdas yang terintegrasi (Gemini API) untuk menjawab pertanyaan umum.
+- **Grafik & Visualisasi Data**: Menampilkan data statistik sektoral (Chart.js/ECharts).
 
-Clone repository:
-```bash
-git clone https://github.com/USERNAME/blogify-admin.git
-cd blogify-admin
-Install dependency:
+### 3. Keamanan & Performa
+- Otentikasi aman menggunakan **Sanctum** / Filament Auth.
+- Real-time broadcasting dengan WebSocket (Reverb) tanpa ketergantungan layanan pihak ketiga berbayar (seperti Pusher).
 
-bash
-Copy code
-composer install
-npm install
-Setup environment:
+---
 
-bash
-Copy code
-cp .env.example .env
-php artisan key:generate
-Migrasi database:
+## 🛠️ Tech Stack
 
-bash
-Copy code
-php artisan migrate
-Storage link (WAJIB untuk upload foto):
+- **Backend**: PHP 8.2+, Laravel 12
+- **Admin Panel**: Filament v4
+- **Frontend**: Blade, Livewire, Tailwind CSS
+- **Real-time**: Laravel Reverb
+- **Database**: MySQL / SQLite (Development)
+- **AI Integration**: Google Gemini API
 
-bash
-Copy code
-php artisan storage:link
-Jalankan server:
+---
 
-bash
-Copy code
-php artisan serve
-Login Admin
-Gunakan akun admin yang sudah dibuat (atau buat manual via seeder / tinker).
+## ⚙️ Instalasi
 
-Struktur Penting
-app/Filament → Resource & admin panel
+Ikuti langkah berikut untuk menjalankan project di lokal:
 
-database/migrations → Struktur tabel
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/sNyum/blogify-main.git
+   cd blogify-main
+   ```
 
-storage/app/public → File upload (foto berita)
+2. **Install Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-Catatan
-Project ini hanya admin, frontend user belum dibuat
+3. **Setup Environment**
+   Salin file konfigurasi dan generate app key:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Pastikan konfigurasi database di `.env` sudah sesuai.*
 
-Filament versi 4 (menggunakan API terbaru, bukan v3)
+4. **Konfigurasi Database & Migrasi**
+   ```bash
+   php artisan migrate --seed
+   ```
+   *(Gunakan `--seed` jika ingin mengisi data awal)*
 
-SQLite direkomendasikan untuk development
+5. **Setup Storage**
+   Agar file upload dapat diakses publik:
+   ```bash
+   php artisan storage:link
+   ```
 
+6. **Jalankan Layanan Real-time (Reverb)**
+   Penting untuk fitur chat:
+   ```bash
+   php artisan reverb:start
+   ```
+
+7. **Compile Assets & Jalankan Server**
+   Buka terminal baru untuk menjalankan Vite dan server Laravel:
+   ```bash
+   npm run dev
+   php artisan serve
+   ```
+
+Akses aplikasi di: `http://localhost:8000`
+
+---
+
+## 📂 Struktur Direktori Penting
+
+- `app/Filament` → Resource, Pages, dan logika Admin Panel.
+- `resources/views` → Tampilan frontend (Landing, User Dashboard).
+- `routes/channels.php` → Konfigurasi channel broadcasting (Chat).
+- `app/Events` → Event untuk broadcasting pesan.
