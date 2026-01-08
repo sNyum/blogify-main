@@ -12,7 +12,7 @@
          class="absolute bottom-20 right-0 w-[350px] sm:w-[400px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[600px] h-[80vh] sm:h-[600px]">
         
         <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-4 flex items-center justify-between shrink-0">
+        <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-4 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
                 <div class="bg-white/20 p-2 rounded-full backdrop-blur-sm">
                     <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,7 +23,7 @@
                     <h3 class="text-white font-bold text-lg leading-tight">Asisten CERDAS</h3>
                     <div class="flex items-center gap-1.5">
                         <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        <p class="text-blue-100 text-xs">Online • BPS Batanghari</p>
+                        <p class="text-orange-100 text-xs">Online • BPS Batanghari</p>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 relative scroll-smooth">
             <!-- Welcome Message -->
             <div class="flex gap-3">
-                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 border border-blue-200">
+                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0 border border-orange-200">
                     <img src="{{ asset('images/bps-logo-full.png') }}" class="w-5 h-5 object-contain" alt="Bot">
                 </div>
                 <div class="space-y-1 max-w-[85%]">
@@ -55,9 +55,9 @@
                 <div :class="msg.isUser ? 'flex flex-row-reverse gap-3' : 'flex gap-3'">
                     <!-- Avatar -->
                     <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 border"
-                         :class="msg.isUser ? 'bg-indigo-100 border-indigo-200' : 'bg-blue-100 border-blue-200'">
+                         :class="msg.isUser ? 'bg-orange-50 border-orange-100' : 'bg-orange-100 border-orange-200'">
                          <template x-if="msg.isUser">
-                            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="w-4 h-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                          </template>
@@ -69,8 +69,30 @@
                     <!-- Bubble -->
                     <div class="space-y-1 max-w-[85%]">
                         <div class="p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm border"
-                             :class="msg.isUser ? 'bg-indigo-600 text-white rounded-tr-none border-indigo-600' : 'bg-white text-gray-700 rounded-tl-none border-gray-100'">
+                             :class="msg.isUser ? 'bg-orange-500 text-white rounded-tr-none border-orange-500' : 'bg-white text-gray-700 rounded-tl-none border-gray-100'">
+                             
+                             <!-- Text Content -->
                              <span x-html="msg.text"></span>
+
+                             <!-- Chart Container -->
+                             <template x-if="!msg.isUser && msg.chartData">
+                                 <div class="mt-3 bg-white p-2 rounded-lg border border-gray-100">
+                                     <canvas :id="'chart-' + index" class="w-full h-48"></canvas>
+                                 </div>
+                             </template>
+
+                             <!-- Download Button -->
+                             <template x-if="!msg.isUser && msg.tableData">
+                                 <div class="mt-3">
+                                     <button @click="downloadExcel(msg.tableData)" 
+                                             class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors w-full justify-center">
+                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                         </svg>
+                                         Download Data Excel
+                                     </button>
+                                 </div>
+                             </template>
                         </div>
                     </div>
                 </div>
@@ -78,7 +100,7 @@
 
             <!-- Loading Indicator -->
             <div x-show="isLoading" class="flex gap-3">
-                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 border border-blue-200">
+                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0 border border-orange-200">
                     <img src="{{ asset('images/bps-logo-full.png') }}" class="w-5 h-5 object-contain" alt="Bot">
                 </div>
                 <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 w-16 flex items-center justify-center gap-1">
@@ -90,16 +112,16 @@
             
             <!-- Quick Replies -->
             <div x-show="messages.length === 0" class="grid grid-cols-2 gap-2 mt-4">
-                <button @click="sendMessage('Bagaimana cara download data?')" class="text-left p-3 rounded-xl border border-blue-100 bg-blue-50/50 hover:bg-blue-100 hover:border-blue-200 transition-colors text-xs text-blue-800 font-medium">
+                <button @click="sendMessage('Bagaimana cara download data?')" class="text-left p-3 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-100 hover:border-orange-200 transition-colors text-xs text-orange-800 font-medium">
                     📚 Cara download data?
                 </button>
-                <button @click="sendMessage('Data inflasi terbaru')" class="text-left p-3 rounded-xl border border-blue-100 bg-blue-50/50 hover:bg-blue-100 hover:border-blue-200 transition-colors text-xs text-blue-800 font-medium">
+                <button @click="sendMessage('Data inflasi terbaru')" class="text-left p-3 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-100 hover:border-orange-200 transition-colors text-xs text-orange-800 font-medium">
                     📈 Data inflasi terbaru
                 </button>
-                <button @click="sendMessage('Jadwal pelayanan BPS')" class="text-left p-3 rounded-xl border border-blue-100 bg-blue-50/50 hover:bg-blue-100 hover:border-blue-200 transition-colors text-xs text-blue-800 font-medium">
+                <button @click="sendMessage('Jadwal pelayanan BPS')" class="text-left p-3 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-100 hover:border-orange-200 transition-colors text-xs text-orange-800 font-medium">
                     ⏰ Jadwal pelayanan
                 </button>
-                <button @click="sendMessage('Kontak WhatsApp BPS')" class="text-left p-3 rounded-xl border border-blue-100 bg-blue-50/50 hover:bg-blue-100 hover:border-blue-200 transition-colors text-xs text-blue-800 font-medium">
+                <button @click="sendMessage('Kontak WhatsApp BPS')" class="text-left p-3 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-100 hover:border-orange-200 transition-colors text-xs text-orange-800 font-medium">
                     📞 Kontak BPS
                 </button>
             </div>
@@ -111,11 +133,11 @@
                 <input type="text" 
                        x-model="inputText" 
                        placeholder="Ketik pertanyaan Anda..." 
-                       class="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all shadow-sm"
+                       class="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition-all shadow-sm"
                        :disabled="isLoading">
                 
                 <button type="submit" 
-                        class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
                         :disabled="!inputText.trim() || isLoading">
                     <svg class="w-4 h-4 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -130,7 +152,7 @@
 
     <!-- Floating Button -->
     <button @click="toggleChat" 
-            class="group relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center text-white overflow-hidden">
+            class="group relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center text-white overflow-hidden">
         
         <!-- Glow Effect -->
         <div class="absolute inset-0 rounded-full bg-white/20 animate-ping opacity-20"></div>
@@ -164,6 +186,13 @@
                 this.$watch('messages', () => {
                     this.$nextTick(() => {
                         this.scrollToBottom();
+                        // Render charts after DOM update
+                        this.messages.forEach((msg, index) => {
+                            if (!msg.isUser && msg.chartData && !msg.chartRendered) {
+                                this.renderChart(index, msg.chartData);
+                                msg.chartRendered = true; // Prevent re-rendering
+                            }
+                        });
                     });
                 });
             },
@@ -209,19 +238,52 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
-                        body: JSON.stringify({ message: text })
+                        body: JSON.stringify({ message: text, history: this.messages })
                     });
                     
                     const data = await response.json();
+                    let rawReply = data.reply;
+                    
+                    // Parse Special Tags
+                    let chartData = null;
+                    let tableData = null;
+
+                    // Detect CHART - match until closing brace before ]]
+                    const chartMatch = rawReply.match(/\[\[CHART:([\s\S]*?)\}\]\]/);
+                    if (chartMatch) {
+                        try {
+                            chartData = JSON.parse(chartMatch[1] + '}');
+                            rawReply = rawReply.replace(chartMatch[0], ''); // Remove tag from text
+                        } catch (e) { 
+                            console.error('Chart JSON Error', e); 
+                            console.error('Chart JSON String:', chartMatch[1] + '}');
+                        }
+                    }
+
+                    // Detect TABLE - match until closing brace before ]]
+                    const tableMatch = rawReply.match(/\[\[TABLE:([\s\S]*?)\}\]\]/);
+                    if (tableMatch) {
+                        try {
+                            tableData = JSON.parse(tableMatch[1] + '}');
+                            rawReply = rawReply.replace(tableMatch[0], ''); // Remove tag from text
+                        } catch (e) { 
+                            console.error('Table JSON Error', e); 
+                            console.error('Table JSON String:', tableMatch[1] + '}');
+                        }
+                    }
                     
                     // Format response (simple markdown to HTML conversion)
-                    let formattedReply = data.reply
+                    let formattedReply = rawReply
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
                         .replace(/\n/g, '<br>'); // Newlines
 
+                    // Push Bot Message with structured data
                     this.messages.push({
                         text: formattedReply,
                         isUser: false,
+                        chartData: chartData,
+                        tableData: tableData,
+                        chartRendered: false,
                         timestamp: new Date()
                     });
 
@@ -234,6 +296,89 @@
                     });
                 } finally {
                     this.isLoading = false;
+                }
+            },
+
+            renderChart(index, data) {
+                const canvasId = `chart-${index}`;
+                const ctx = document.getElementById(canvasId);
+                
+                if (ctx && window.Chart) {
+                    new window.Chart(ctx, {
+                        type: data.type || 'bar',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: data.title || 'Data Statistik',
+                                data: data.data,
+                                backgroundColor: [
+                                    'rgba(59, 130, 246, 0.7)',
+                                    'rgba(16, 185, 129, 0.7)', 
+                                    'rgba(245, 158, 11, 0.7)',
+                                    'rgba(239, 68, 68, 0.7)',
+                                    'rgba(139, 92, 246, 0.7)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: false },
+                                title: { display: !!data.title, text: data.title }
+                            },
+                            scales: {
+                                y: { beginAtZero: true }
+                            }
+                        }
+                    });
+                }
+            },
+
+            downloadExcel(data) {
+                if (!data || !window.XLSX) {
+                    console.error('SheetJS library not loaded or data is missing');
+                    return;
+                }
+                
+                try {
+                    // Create a new workbook
+                    const wb = window.XLSX.utils.book_new();
+                    
+                    // Prepare data array with headers
+                    const wsData = [];
+                    
+                    // Add header row
+                    if (data.columns && data.columns.length > 0) {
+                        wsData.push(data.columns);
+                    }
+                    
+                    // Add data rows
+                    if (data.rows && data.rows.length > 0) {
+                        data.rows.forEach(row => {
+                            wsData.push(row);
+                        });
+                    }
+                    
+                    // Create worksheet from data
+                    const ws = window.XLSX.utils.aoa_to_sheet(wsData);
+                    
+                    // Set column widths for better readability
+                    const colWidths = data.columns ? data.columns.map(() => ({ wch: 20 })) : [];
+                    ws['!cols'] = colWidths;
+                    
+                    // Add worksheet to workbook
+                    window.XLSX.utils.book_append_sheet(wb, ws, "Data BPS");
+                    
+                    // Generate filename
+                    const filename = (data.title || "data_bps_batanghari") + ".xlsx";
+                    
+                    // Write and download the file
+                    window.XLSX.writeFile(wb, filename);
+                    
+                } catch (error) {
+                    console.error('Error generating Excel file:', error);
+                    alert('Maaf, terjadi kesalahan saat membuat file Excel.');
                 }
             }
         }

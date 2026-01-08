@@ -16,7 +16,7 @@
     <!-- Header Section -->
     <div class="pt-32 pb-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full">
+            <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-orange-600 uppercase bg-orange-50 rounded-full">
                 Publikasi BPS
             </span>
             <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -43,14 +43,14 @@
                                 </div>
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
-                                <a href="{{ asset('storage/' . $book->pdf_path) }}" target="_blank" class="inline-flex items-center text-sm font-bold text-white hover:text-blue-200 transition-colors duration-300">
+                                <a href="{{ asset('storage/' . $book->pdf_path) }}" target="_blank" class="inline-flex items-center text-sm font-bold text-white hover:text-orange-200 transition-colors duration-300">
                                     <svg class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     Lihat PDF
                                 </a>
                             </div>
                          </div>
                         <div class="p-4 flex-grow flex flex-col">
-                            <h3 class="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight mb-2">
+                            <h3 class="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-2 leading-tight mb-2">
                                 <a href="{{ asset('storage/' . $book->pdf_path) }}" target="_blank">
                                     <span class="absolute inset-0"></span>
                                     {{ $book->judul }}
@@ -58,7 +58,7 @@
                             </h3>
                             <div class="mt-auto pt-2 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
                                 <span>{{ $book->created_at->format('M Y') }}</span>
-                                <span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium">Buku</span>
+                                <span class="bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">Buku</span>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                 <h3 class="text-xl font-medium text-slate-900 mb-2">Belum ada pustaka tersedia</h3>
                 <p class="text-slate-500">Silakan kembali lagi nanti.</p>
                  <div class="mt-8">
-                    <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                    <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-orange-600 hover:bg-orange-700 transition-colors">
                         Kembali ke Beranda
                     </a>
                 </div>

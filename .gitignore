@@ -29,3 +29,4 @@ Thumbs.db
 /storage/framework
 /database/*.sqlite
 
+node_modules

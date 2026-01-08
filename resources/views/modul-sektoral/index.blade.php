@@ -17,7 +17,7 @@
     <!-- Header Section -->
     <div class="pt-32 pb-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full">
+            <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-orange-600 uppercase bg-orange-50 rounded-full">
                 Koleksi Data BPS
             </span>
             <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -38,7 +38,7 @@
                         
                         <!-- Card Header / Icon -->
                         <div class="p-6 pb-0 flex items-start justify-between">
-                            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 shadow-inner">
+                            <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors duration-500 shadow-inner">
                                 <svg class="w-6 h-6 transform group-hover:scale-110 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
@@ -50,7 +50,7 @@
 
                         <!-- Card Body -->
                         <div class="p-6 flex-grow flex flex-col">
-                            <h3 class="text-lg font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                            <h3 class="text-lg font-bold text-slate-900 mb-3 group-hover:text-orange-600 transition-colors line-clamp-2">
                                 <a href="/modul-sektoral/{{ $modul->slug }}" class="hover:underline decoration-2 underline-offset-2">
                                     {{ $modul->judul }}
                                 </a>
@@ -67,7 +67,7 @@
 
                         <!-- Card Footer -->
                         <div class="p-6 pt-0 mt-auto">
-                            <a href="/modul-sektoral/{{ $modul->slug }}" class="inline-flex items-center justify-center w-full px-4 py-2.5 text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-xl transition-all duration-300 group-hover:shadow-md">
+                            <a href="/modul-sektoral/{{ $modul->slug }}" class="inline-flex items-center justify-center w-full px-4 py-2.5 text-sm font-semibold text-orange-600 bg-orange-50 hover:bg-orange-600 hover:text-white rounded-xl transition-all duration-300 group-hover:shadow-md">
                                 Lihat Detail
                                 <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -93,7 +93,7 @@
                 <h3 class="text-xl font-medium text-slate-900 mb-2">Belum ada modul tersedia</h3>
                 <p class="text-slate-500">Silakan kembali lagi nanti untuk update terbaru.</p>
                 <div class="mt-8">
-                    <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                    <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-orange-600 hover:bg-orange-700 transition-colors">
                         Kembali ke Beranda
                     </a>
                 </div>

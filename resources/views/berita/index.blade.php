@@ -16,7 +16,7 @@
     <!-- Header Section -->
     <div class="pt-32 pb-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full">
+            <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-orange-600 uppercase bg-orange-50 rounded-full">
                 Informasi Terkini
             </span>
             <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -55,7 +55,7 @@
                                 <time datetime="{{ $news->created_at }}">{{ $news->created_at->format('d M Y') }}</time>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 leading-snug">
-                                <a href="{{ $news->youtube_url ?? '#' }}" {{ $news->youtube_url ? 'target=_blank' : '' }} class="hover:text-blue-600 transition-colors">{{ $news->judul }}</a>
+                                <a href="{{ $news->youtube_url ?? '#' }}" {{ $news->youtube_url ? 'target=_blank' : '' }} class="hover:text-orange-600 transition-colors">{{ $news->judul }}</a>
                             </h3>
                             <div class="text-gray-600 text-sm line-clamp-3 mb-6 flex-grow">
                                 {!! Str::limit(strip_tags($news->konten), 120) !!}
@@ -67,7 +67,7 @@
                                         @php
                                             $isYoutube = Str::contains($news->youtube_url, ['youtube.com', 'youtu.be']);
                                         @endphp
-                                        <div class="flex items-center px-3 py-1 rounded-full {{ $isYoutube ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-blue-50 text-blue-600 hover:bg-blue-100' }} transition-colors w-max max-w-full">
+                                        <div class="flex items-center px-3 py-1 rounded-full {{ $isYoutube ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-orange-50 text-orange-600 hover:bg-orange-100' }} transition-colors w-max max-w-full">
                                             @if($isYoutube)
                                                 <svg class="w-3.5 h-3.5 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                                             @else
@@ -78,7 +78,7 @@
                                     </div>
                                 @endif
 
-                                <a href="{{ $news->youtube_url ?? '#' }}" {{ $news->youtube_url ? 'target=_blank' : '' }} class="inline-flex items-center w-full justify-center px-4 py-2.5 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-xl transition-all duration-300">
+                                <a href="{{ $news->youtube_url ?? '#' }}" {{ $news->youtube_url ? 'target=_blank' : '' }} class="inline-flex items-center w-full justify-center px-4 py-2.5 text-sm font-medium text-orange-600 bg-orange-50 hover:bg-orange-600 hover:text-white rounded-xl transition-all duration-300">
                                     @if(Str::contains($news->youtube_url, ['youtube.com', 'youtu.be']))
                                         Tonton Video
                                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -108,7 +108,7 @@
                 <h3 class="text-xl font-medium text-slate-900 mb-2">Belum ada berita</h3>
                 <p class="text-slate-500">Silakan kembali lagi nanti.</p>
                 <div class="mt-8">
-                    <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                    <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-orange-600 hover:bg-orange-700 transition-colors">
                         Kembali ke Beranda
                     </a>
                 </div>
