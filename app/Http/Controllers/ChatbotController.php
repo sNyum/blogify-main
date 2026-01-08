@@ -6,16 +6,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\OpenRouterService;
 use App\Services\BPSSearchService;
+use App\Services\KBLISearchService;
 
 class ChatbotController extends Controller
 {
     protected $openRouterService;
     protected $bpsSearchService;
+    protected $kbliSearchService;
 
-    public function __construct(OpenRouterService $openRouterService, BPSSearchService $bpsSearchService)
+    public function __construct(
+        OpenRouterService $openRouterService, 
+        BPSSearchService $bpsSearchService,
+        KBLISearchService $kbliSearchService
+    )
     {
         $this->openRouterService = $openRouterService;
         $this->bpsSearchService = $bpsSearchService;
+        $this->kbliSearchService = $kbliSearchService;
     }
 
     public function chat(Request $request)
@@ -73,7 +80,20 @@ class ChatbotController extends Controller
         $messages[] = ['role' => 'user', 'content' => $userMessage];
 
         try {
-            // 5. Generate Response via OpenRouter (Gemini)
+            // 4. KBLI 2025 Context Injection (RAG - Local PDF Data)
+        // Check if query is related to KBLI
+        if (stripos($userMessage, 'kbli') !== false || stripos($userMessage, 'usaha') !== false || stripos($userMessage, 'kode') !== false || stripos($userMessage, 'bisnis') !== false || stripos($userMessage, 'dagang') !== false) {
+            $kbliResults = $this->kbliSearchService->search($userMessage);
+            if (!empty($kbliResults)) {
+                $systemPrompt .= "\n\n[SUMBER DATA KBLI 2025 (PDF INTERNAL)]:\n";
+                foreach ($kbliResults as $result) {
+                    $systemPrompt .= "- (Halaman " . $result['page'] . "): " . substr($result['content'], 0, 800) . "...\n";
+                }
+                $systemPrompt .= "\nGunakan informasi di atas untuk menjawab pertanyaan terkait kode KBLI atau klasifikasi lapangan usaha.\n";
+            }
+        }
+
+        // 5. Generate Response via OpenRouter (Gemini/Xiaomi)
             $reply = $this->openRouterService->generateResponse($messages);
 
             
