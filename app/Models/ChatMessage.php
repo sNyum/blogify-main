@@ -23,6 +23,8 @@ class ChatMessage extends Model
         'read_at',
     ];
 
+    protected $touches = ['conversation'];
+
     protected function casts(): array
     {
         return [

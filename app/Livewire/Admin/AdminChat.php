@@ -78,10 +78,16 @@ class AdminChat extends Component
 
     public function sendMessage()
     {
-        $this->validate([
-            'newMessage' => 'nullable|string|max:1000',
-            'file' => 'nullable|file|max:10240', // 10MB max
-        ]);
+        \Illuminate\Support\Facades\Validator::make(
+            [
+                'newMessage' => $this->newMessage,
+                'file' => $this->file,
+            ],
+            [
+                'newMessage' => 'nullable|string|max:1000',
+                'file' => 'nullable|file|max:10240', // 10MB max
+            ]
+        )->validate();
 
         if ((!$this->newMessage && !$this->file) || !$this->currentConversation) {
             return;
@@ -122,7 +128,7 @@ class AdminChat extends Component
         $this->loadMessages();
         $this->dispatch('scrollToBottom');
 
-        broadcast(new MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message, $this->currentConversation))->toOthers();
     }
 
     public function assignToMe()
@@ -180,7 +186,7 @@ class AdminChat extends Component
         ];
 
         if ($this->currentConversation) {
-            $listeners["echo:chat.{$this->currentConversation->id},MessageSent"] = 'handleNewMessage';
+            $listeners["echo:chat.{$this->currentConversation->id},.message.sent"] = 'handleNewMessage';
         }
 
         return $listeners;
@@ -192,6 +198,9 @@ class AdminChat extends Component
             $this->loadMessages();
             $this->dispatch('scrollToBottom');
         }
+        
+        // Refresh conversations list to update order/preview
+        unset($this->conversations); 
     }
 
     public function render()

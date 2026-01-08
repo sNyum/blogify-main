@@ -5,7 +5,8 @@
     <div class="max-w-7xl mx-auto h-[calc(100vh-140px)] bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 flex">
         
         <!-- Sidebar: Conversations List -->
-        <div class="w-full md:w-80 lg:w-96 border-r border-gray-100 bg-gray-50/50 flex flex-col transition-all duration-300">
+        <div class="w-full md:w-80 lg:w-96 border-r border-gray-100 bg-gray-50/50 flex flex-col transition-all duration-300"
+             :class="{'hidden md:flex': currentConversation, 'flex': !currentConversation}">
             <!-- Sidebar Header -->
             <div class="p-6 border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
                 <div class="flex justify-between items-center mb-4">
@@ -101,7 +102,8 @@
         </div>
 
         <!-- Main Chat Area -->
-        <div class="hidden md:flex flex-1 flex-col bg-white relative">
+        <div class="flex-1 flex-col bg-white relative" 
+             :class="{'flex': currentConversation, 'hidden md:flex': !currentConversation}">
             <!-- Empty State -->
             <template x-if="!currentConversation">
                 <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/30">
@@ -121,6 +123,11 @@
                     <!-- Chat Header -->
                     <div class="px-6 py-4 border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10 flex justify-between items-center shadow-sm">
                         <div class="flex items-center gap-4">
+                            <!-- Back Button for Mobile -->
+                            <button @click="currentConversation = null" class="md:hidden p-1 mr-[-8px] text-gray-500 hover:text-orange-600">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                            
                             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-orange-500/20">
                                 <span x-text="currentConversation.subject.substring(0, 1).toUpperCase()"></span>
                             </div>
@@ -137,7 +144,7 @@
                                             'bg-yellow-500': currentConversation.status === 'assigned',
                                             'bg-gray-500': currentConversation.status === 'closed'
                                         }"></span>
-                                        <span x-text="currentConversation.status === 'open' ? 'Terbuka' : (currentConversation.status === 'assigned' ? 'Sedang Diproses' : 'Selesai')"></span>
+                                        <span x-text="currentConversation.status === 'open' ? 'Terbuka' : (currentConversation.status === 'assigned' ? 'Diproses' : 'Selesai')"></span>
                                     </span>
                                     <template x-if="currentConversation.assigned_admin">
                                         <span class="text-gray-400">• Dilayani oleh: <span class="font-medium text-gray-600" x-text="currentConversation.assigned_admin"></span></span>
