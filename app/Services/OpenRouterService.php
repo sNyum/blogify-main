@@ -13,8 +13,8 @@ class OpenRouterService
 
     public function __construct()
     {
-        // Use the provided key
-        $this->apiKey = env('OPENROUTER_API_KEY', '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');
+        // Use key from .env
+        $this->apiKey = env('OPENROUTER_API_KEY');
     }
 
     public function generateResponse(array $messages)
