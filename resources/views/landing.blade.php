@@ -12,7 +12,7 @@
 </head>
 <body class="bg-background-soft text-gray-800 antialiased font-sans">
     <!-- Navbar -->
-    <nav id="navbar" class="bg-white/90 backdrop-blur-xl fixed w-full z-50 border-b border-gray-200/50 shadow-lg shadow-primary/5 transition-all duration-500 ease-out">
+    <nav id="navbar" x-data="{ mobileMenuOpen: false }" class="bg-white/90 backdrop-blur-xl fixed w-full z-50 border-b border-gray-200/50 shadow-lg shadow-primary/5 transition-all duration-500 ease-out">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div id="nav-content" class="flex justify-between h-20 transition-all duration-500">
                 <div class="flex items-center">
@@ -21,6 +21,8 @@
                         <span class="font-bold text-xl text-primary tracking-wide hidden md:block">BISTIK KALDU</span>
                     </a>
                 </div>
+
+                <!-- Desktop Menu -->
                 <div class="hidden sm:flex sm:items-center sm:gap-8">
                     <a href="/modul-sektoral" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
                         Modul Sektoral
@@ -47,7 +49,6 @@
                                 </svg>
                                 Live Chat
                             </span>
-                            <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-primary-hover"></span>
                         </a>
                         
                         <div class="relative" x-data="{ open: false }">
@@ -55,7 +56,7 @@
                                 <div class="w-8 h-8 bg-gradient-to-br from-primary to-primary-hover rounded-full flex items-center justify-center text-white font-semibold">
                                     {{ substr(auth('external')->user()->name, 0, 1) }}
                                 </div>
-                                <span>{{ auth('external')->user()->name }}</span>
+                                <span class="hidden lg:inline">{{ auth('external')->user()->name }}</span>
                                 <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
@@ -79,6 +80,44 @@
                         </button>
                     @endauth
                 </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="flex items-center sm:hidden">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-600 hover:text-primary p-2 focus:outline-none">
+                        <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div x-show="mobileMenuOpen" x-collapse x-cloak class="sm:hidden bg-white border-t border-gray-100 shadow-lg">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="/modul-sektoral" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Modul Sektoral</a>
+                <a href="/berita" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Berita</a>
+                <a href="/pustaka" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Pustaka</a>
+                <a href="/#konsultasi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Konsultasi</a>
+                
+                @auth('external')
+                     <a href="/chat" class="block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-orange-50 font-bold">Live Chat</a>
+                     <div class="border-t border-gray-100 my-2 pt-2">
+                        <div class="px-3 py-2 text-sm text-gray-500">Logged in as {{ auth('external')->user()->name }}</div>
+                        <a href="/dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Dashboard</a>
+                        <form action="/logout" method="POST" class="block">
+                            @csrf
+                            <button type="submit" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50">Logout</button>
+                        </form>
+                     </div>
+                @else
+                    <button onclick="openLoginModal()" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-orange-50 font-bold">
+                        Login
+                    </button>
+                @endauth
             </div>
         </div>
     </nav>
@@ -155,12 +194,12 @@
     <!-- Modul Sektoral (Dynamic) -->
     <div id="modul-sektoral" class="py-16 bg-background-soft">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="relative flex items-end justify-center mb-12">
-                <div class="text-center">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
+                <div class="text-center md:text-left w-full md:w-auto mx-auto md:mx-0">
                     <h2 class="text-base font-bold text-orange-600 tracking-wide uppercase">Katalog Data</h2>
                     <p class="mt-1 text-3xl font-extrabold text-gray-900">Modul Sektoral</p>
                 </div>
-                <a href="/modul-sektoral" class="absolute right-0 bottom-1 group flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors">
+                <a href="/modul-sektoral" class="group flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors">
                     Lihat Semua
                     <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
