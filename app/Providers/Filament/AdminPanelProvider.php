@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 'panels::head.end',
-                fn (): string => \Illuminate\Support\Facades\Blade::render("@vite('resources/css/app.css')")
+                fn (): string => \Illuminate\Support\Facades\Blade::render("@vite(['resources/css/app.css', 'resources/js/admin.js'])")
             );
     }
 }

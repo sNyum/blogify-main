@@ -67,7 +67,10 @@ class ChatConversation extends Model
      */
     public function unreadMessagesCount(): int
     {
-        return $this->messages()->where('is_read', false)->count();
+        return $this->messages()
+            ->where('is_read', false)
+            ->where('sender_type', 'user')
+            ->count();
     }
 
     /**

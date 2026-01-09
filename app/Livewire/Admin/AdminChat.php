@@ -58,6 +58,7 @@ class AdminChat extends Component
         $this->currentConversation = ChatConversation::with('externalUser')->find($conversationId);
         $this->loadMessages();
         $this->dispatch('scrollToBottom');
+        unset($this->conversations); // Force refresh of conversation list (badges)
     }
 
     public function loadMessages()
@@ -186,7 +187,7 @@ class AdminChat extends Component
         ];
 
         if ($this->currentConversation) {
-            $listeners["echo:chat.{$this->currentConversation->id},.message.sent"] = 'handleNewMessage';
+            $listeners["echo-private:chat.{$this->currentConversation->id},message.sent"] = 'handleNewMessage';
         }
 
         return $listeners;

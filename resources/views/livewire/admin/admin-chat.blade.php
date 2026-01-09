@@ -36,7 +36,8 @@
         <!-- Conversation List -->
         <div class="flex-1 overflow-y-auto" wire:poll.10s>
             @forelse($conversations as $conversation)
-                <div wire:click="selectConversation({{ $conversation->id }})" 
+                <div wire:key="{{ $conversation->id }}" 
+                     wire:click="selectConversation({{ $conversation->id }})" 
                      class="p-4 cursor-pointer border-b border-gray-100 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-800 transition-colors {{ $currentConversation && $currentConversation->id === $conversation->id ? 'bg-white dark:bg-gray-800 border-l-4 border-l-primary shadow-sm' : '' }}">
                     <div class="flex justify-between items-start mb-1">
                         <h3 class="text-sm font-semibold text-gray-900 dark:text-white truncate max-w-[140px]">
@@ -108,8 +109,25 @@
             </div>
 
             <!-- Messages List -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50 dark:bg-gray-900/50" id="admin-chat-container">
+            <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50 dark:bg-gray-900/50" 
+                 id="admin-chat-container" 
+                 wire:poll.2000ms="loadMessages">
+                @php $lastDate = null; @endphp
                 @foreach($messages as $message)
+                    @php 
+                        $currentDate = $message->created_at->format('Y-m-d');
+                        $showDate = $lastDate !== $currentDate;
+                        $lastDate = $currentDate;
+                    @endphp
+
+                    @if($showDate)
+                        <div class="flex justify-center my-4">
+                            <span class="text-[10px] font-medium text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+                                {{ $message->created_at->isToday() ? 'Hari Ini' : ($message->created_at->isYesterday() ? 'Kemarin' : $message->created_at->translatedFormat('l, d F Y')) }}
+                            </span>
+                        </div>
+                    @endif
+
                     <div class="flex flex-col {{ $message->isFromAdmin() ? 'items-end' : ($message->isSystem() ? 'items-center' : 'items-start') }}">
                         
                         @if($message->isSystem())
@@ -214,6 +232,7 @@
     </div>
 
     <!-- Scroll Script -->
+    <!-- Real-time & Scroll Script -->
     <script>
         document.addEventListener('livewire:initialized', () => {
             const container = document.getElementById('admin-chat-container');
@@ -221,7 +240,47 @@
                 if(container) container.scrollTop = container.scrollHeight;
             };
 
-            Livewire.on('scrollToBottom',scrollToBottom);
+            Livewire.on('scrollToBottom', scrollToBottom);
+
+            // Manual Echo Subscription for robustness
+            let activeChannel = null;
+
+            Livewire.hook('morph.updated', ({ component, el }) => {
+                if(component.name === 'admin.admin-chat') {
+                    const conversationId = @this.get('currentConversation.id');
+                    
+                    if (conversationId && (!activeChannel || activeChannel.name !== `private-chat.${conversationId}`)) {
+                        
+                        if (activeChannel) {
+                            console.log('Leaving channel:', activeChannel.name);
+                            window.Echo.leave(activeChannel.name);
+                        }
+
+                        const channelName = `chat.${conversationId}`;
+                        console.log('Joining channel:', channelName);
+
+                        activeChannel = window.Echo.private(channelName);
+                        
+                        // Listen for both with and without dot, just in case
+                        activeChannel
+                            .listen('.message.sent', (e) => {
+                                console.log('Message received (.message.sent):', e);
+                                @this.call('loadMessages');
+                                @this.dispatch('scrollToBottom');
+                            })
+                            .listen('MessageSent', (e) => {
+                                console.log('Message received (MessageSent):', e);
+                                @this.call('loadMessages');
+                                @this.dispatch('scrollToBottom');
+                            })
+                            .listen('message.sent', (e) => {
+                                console.log('Message received (message.sent):', e);
+                                @this.call('loadMessages');
+                                @this.dispatch('scrollToBottom');
+                            });
+                    }
+                }
+            });
         });
     </script>
 </div>
