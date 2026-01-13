@@ -13,7 +13,7 @@ class LandingController extends Controller
     public function index()
     {
         $modulSektoral = ModulSektoral::latest()->take(3)->get();
-        $pustaka = Pustaka::latest()->take(4)->get();
+        $pustaka = Pustaka::latest()->take(6)->get();
         $berita = Berita::latest()->take(3)->get();
 
         return view('landing', compact('modulSektoral', 'pustaka', 'berita'));

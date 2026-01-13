@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -24,19 +24,19 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden sm:flex sm:items-center sm:gap-8">
-                    <a href="/modul-sektoral" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
+                    <a href="#modul-sektoral" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
                         Modul Sektoral
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/berita" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
+                    <a href="#berita" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
                         Berita
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/pustaka" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
+                    <a href="#pustaka" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
                         Pustaka
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/#konsultasi" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
+                    <a href="#konsultasi" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
                         Konsultasi
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
                     </a>
@@ -98,10 +98,10 @@
         <!-- Mobile Menu Panel -->
         <div x-show="mobileMenuOpen" x-collapse x-cloak class="sm:hidden bg-white border-t border-gray-100 shadow-lg">
             <div class="px-4 pt-2 pb-6 space-y-1">
-                <a href="/modul-sektoral" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Modul Sektoral</a>
-                <a href="/berita" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Berita</a>
-                <a href="/pustaka" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Pustaka</a>
-                <a href="/#konsultasi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Konsultasi</a>
+                <a href="#modul-sektoral" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Modul Sektoral</a>
+                <a href="#berita" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Berita</a>
+                <a href="#pustaka" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Pustaka</a>
+                <a href="#konsultasi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Konsultasi</a>
                 
                 @auth('external')
                      <a href="/chat" class="block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-orange-50 font-bold">Live Chat</a>
@@ -226,9 +226,17 @@
     <!-- Berita (Dynamic) -->
     <div id="berita" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-base font-bold text-primary tracking-wide uppercase">Informasi</h2>
-                <p class="mt-1 text-3xl font-extrabold text-gray-900">Berita Terbaru</p>
+            <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
+                <div class="text-center md:text-left w-full md:w-auto mx-auto md:mx-0">
+                    <h2 class="text-base font-bold text-primary tracking-wide uppercase">Informasi</h2>
+                    <p class="mt-1 text-3xl font-extrabold text-gray-900">Berita Terbaru</p>
+                </div>
+                <a href="/berita" class="group flex items-center gap-2 text-sm font-semibold text-primary hover:text-orange-700 transition-colors">
+                    Lihat Semua
+                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
             </div>
             <div class="grid gap-8 md:grid-cols-3">
                 @forelse($berita as $news)
@@ -248,6 +256,145 @@
                 @empty
                     <div class="col-span-3 text-center py-8 text-gray-500">Belum ada berita.</div>
                 @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- Pustaka (Dynamic) -->
+    <div id="pustaka" class="py-16 bg-background-soft">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
+                <div class="text-center md:text-left w-full md:w-auto mx-auto md:mx-0">
+                    <h2 class="text-base font-bold text-orange-600 tracking-wide uppercase">Publikasi</h2>
+                    <p class="mt-1 text-3xl font-extrabold text-gray-900">Pustaka Digital</p>
+                </div>
+                <a href="/pustaka" class="group flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors">
+                    Lihat Semua
+                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+                @forelse($pustaka as $item)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all group">
+                         <div class="aspect-[3/4] bg-gray-100 relative overflow-hidden">
+                            @if($item->cover_path)
+                                <img src="{{ asset('storage/' . $item->cover_path) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                    <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                            @endif
+                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <a href="{{ asset('storage/' . $item->pdf_path) }}" target="_blank" class="p-2 bg-white rounded-full text-gray-900 hover:text-primary transition-colors" title="Baca">
+                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </a>
+                             </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-bold text-gray-900 mb-1 text-sm line-clamp-2" title="{{ $item->judul }}">{{ $item->judul }}</h3>
+                            <p class="text-xs text-gray-500">{{ $item->created_at->format('d M Y') }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-2 md:col-span-3 lg:col-span-6 text-center py-8 text-gray-500">Belum ada pustaka.</div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- Konsultasi Section -->
+    <div id="konsultasi" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-base font-bold text-primary tracking-wide uppercase">Bantuan</h2>
+                <p class="mt-1 text-3xl font-extrabold text-gray-900">Layanan Konsultasi</p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">Butuh bantuan terkait data statistik? Kami siap membantu anda.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Live Chat -->
+                <div class="relative group bg-white p-6 flex flex-col h-full focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Live Chat</h3>
+                        <p class="mt-2 text-sm text-gray-500">Konsultasi langsung dengan agen kami melalui fitur chat website.</p>
+                    </div>
+                    <div class="mt-auto pt-6">
+                        @auth('external')
+                            <a href="/chat" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                                Mulai Chat
+                                <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        @else
+                            <button onclick="openLoginModal()" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                                Login untuk Chat
+                                <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </button>
+                        @endauth
+                    </div>
+                </div>
+
+                <!-- Kunjungan Langsung -->
+                <div class="relative group bg-white p-6 flex flex-col h-full rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors">Pelayanan Statistik Terpadu</h3>
+                        <p class="mt-2 text-sm text-gray-500">Jln. Jend. Sudirman Km.3 Muara Bulian, Batang Hari - Jambi, 36613</p>
+                    </div>
+                    <div class="mt-auto pt-6">
+                        <a href="https://maps.app.goo.gl/example" target="_blank" class="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold text-sm">
+                            Lihat di Maps
+                            <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Kontak -->
+                <div class="relative group bg-white p-6 flex flex-col h-full rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                    <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mb-6 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors">Hubungi Kami</h3>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Email: bps1504@bps.go.id<br>
+                            Telp: (0743) 21008
+                        </p>
+                    </div>
+                    <div class="mt-auto pt-6">
+                        <a href="mailto:bps1504@bps.go.id" class="inline-flex items-center text-green-600 hover:text-green-700 font-semibold text-sm">
+                            Kirim Email
+                            <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

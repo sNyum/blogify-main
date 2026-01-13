@@ -19,8 +19,8 @@
         <div class="bg-white rounded-2xl shadow-2xl p-8">
             <!-- Logo/Header -->
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Registrasi</h1>
-                <p class="text-gray-600">BPS Kabupaten Batanghari</p>
+                <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo BPS" class="h-20 w-auto mx-auto mb-4">
+                <h1 class="text-3xl font-bold text-gray-800">Registrasi</h1>
             </div>
 
             <!-- Error Messages -->
