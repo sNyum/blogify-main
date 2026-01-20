@@ -47,4 +47,5 @@ Route::get('/modul-sektoral/{slug}', [ModulSektoralController::class, 'show']);
 Route::get('/berita', [App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
 Route::get('/pustaka', [App\Http\Controllers\PustakaController::class, 'index'])->name('pustaka.index');
 Route::post('/chatbot/chat', [App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
+Route::post('/chatbot/feedback', [App\Http\Controllers\ChatbotController::class, 'submitFeedback'])->name('chatbot.feedback');
 Route::get('/data/download/population', [App\Http\Controllers\DataController::class, 'downloadPopulationData'])->name('data.download.population');

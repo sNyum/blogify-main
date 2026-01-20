@@ -124,13 +124,34 @@
                                      </template>
                                  </div>
                              </template>
+
+                        </div>
+                        
+                        <!-- Feedback UI Code -->
+                        <div x-show="!msg.isUser && !msg.feedbackGiven && !isLoading" class="flex items-center gap-2 mt-1 ml-1">
+                            <p class="text-[10px] text-gray-400">Membantu?</p>
+                            <button @click="submitFeedback(index, 'up', msg)" class="p-1 hover:bg-green-50 rounded-full transition-colors text-gray-400 hover:text-green-600" title="Ya">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                </svg>
+                            </button>
+                            <button @click="submitFeedback(index, 'down', msg)" class="p-1 hover:bg-red-50 rounded-full transition-colors text-gray-400 hover:text-red-600" title="Tidak">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Feedback Thank You -->
+                        <div x-show="msg.feedbackGiven" class="text-[10px] text-gray-400 mt-1 ml-1 italic animate-fade-in">
+                            Terima kasih!
                         </div>
                     </div>
                 </div>
             </template>
 
             <!-- Loading Indicator -->
-            <div x-show="isLoading" class="flex gap-3">
+            <div x-show="isLoading" class="flex gap-3 mt-4">
                 <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0 border border-orange-200">
                     <img src="{{ asset('images/bps-logo-full.png') }}" class="w-5 h-5 object-contain" alt="Bot">
                 </div>
@@ -454,6 +475,35 @@
                 } catch (error) {
                     console.error('Error generating Excel file:', error);
                     alert('Maaf, terjadi kesalahan saat membuat file Excel.');
+                }
+            },
+
+            async submitFeedback(index, rating, msg) {
+                try {
+                    // Prevent double submission
+                    if (this.messages[index].feedbackGiven) return;
+
+                    // Optimistic UI Update
+                    msg.feedbackGiven = true; // Use msg object directly for reactivity
+
+                    // Send to Backend
+                    await fetch('/chatbot/feedback', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            query: this.messages[index-1] ? this.messages[index-1].text : '',
+                            response: msg.text,
+                            rating: rating
+                        })
+                    });
+                    
+                    console.log('Feedback submitted:', rating);
+
+                } catch (error) {
+                    console.error('Feedback Error:', error);
                 }
             }
         }

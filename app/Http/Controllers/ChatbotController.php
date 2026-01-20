@@ -208,4 +208,19 @@ class ChatbotController extends Controller
             return response()->json(['reply' => 'Terjadi kesalahan sistem fatal.', 'status' => 'error'], 500);
         }
     }
+    public function submitFeedback(Request $request) {
+        $request->validate([
+            'query' => 'nullable|string',
+            'response' => 'nullable|string',
+            'rating' => 'required|in:up,down'
+        ]);
+
+        \App\Models\ChatbotFeedback::create([
+            'user_query' => $request->input('query'),
+            'bot_response' => $request->input('response'),
+            'rating' => $request->input('rating'),
+        ]);
+
+        return response()->json(['status' => 'success']);
+    }
 }
