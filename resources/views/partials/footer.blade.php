@@ -65,11 +65,9 @@
 
                 <!-- Right Content: BerAKHLAK Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 transform hover:scale-105 hover:bg-white/15 transition-all duration-300 shadow-xl">
-                        <img class="h-12 sm:h-16 w-auto" 
-                             src="{{ asset('images/berakhlak-logo-new.png') }}" 
-                             alt="BerAKHLAK">
-                    </div>
+                    <img class="h-12 sm:h-16 w-auto transform hover:scale-105 transition-transform duration-300 filter drop-shadow-md" 
+                         src="{{ asset('images/berakhlak-logo-new.png') }}" 
+                         alt="BerAKHLAK">
                 </div>
             </div>
             
