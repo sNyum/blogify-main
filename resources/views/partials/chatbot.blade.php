@@ -74,23 +74,54 @@
                              <!-- Text Content -->
                              <span x-html="msg.text"></span>
 
-                             <!-- Chart Container -->
-                             <template x-if="!msg.isUser && msg.chartData">
-                                 <div class="mt-3 bg-white p-2 rounded-lg border border-gray-100">
-                                     <canvas :id="'chart-' + index" class="w-full h-48"></canvas>
+                             <!-- Charts Container -->
+                             <template x-if="!msg.isUser && msg.charts && msg.charts.length > 0">
+                                 <div class="space-y-3 mt-3">
+                                     <template x-for="(chart, cIndex) in msg.charts" :key="cIndex">
+                                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+                                            <canvas :id="'chart-' + index + '-' + cIndex" class="w-full h-48"></canvas>
+                                        </div>
+                                     </template>
                                  </div>
                              </template>
 
-                             <!-- Download Button -->
-                             <template x-if="!msg.isUser && msg.tableData">
-                                 <div class="mt-3">
-                                     <button @click="downloadExcel(msg.tableData)" 
-                                             class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors w-full justify-center">
-                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                         </svg>
-                                         Download Data Excel
-                                     </button>
+                             <!-- Tables & Download -->
+                             <template x-if="!msg.isUser && msg.tables && msg.tables.length > 0">
+                                 <div class="space-y-3 mt-3">
+                                     <template x-for="(table, tIndex) in msg.tables" :key="tIndex">
+                                        <div class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+                                            <!-- Download Button -->
+                                            <button @click="downloadExcel(table)" 
+                                                    class="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 w-full px-3 py-2 text-xs font-medium transition-colors border-b border-green-100">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                </svg>
+                                                <span x-text="'Download Excel: ' + (table.title || 'Data')"></span>
+                                            </button>
+
+                                            <!-- Preview Table -->
+                                            <div class="overflow-x-auto max-h-40 overflow-y-auto p-2 scrollbar-thin">
+                                                <table class="w-full text-xs text-left text-gray-600">
+                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+                                                        <tr>
+                                                            <template x-for="col in table.columns">
+                                                                <th scope="col" class="px-2 py-1.5" x-text="col"></th>
+                                                            </template>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <template x-for="row in table.rows">
+                                                            <tr class="bg-white border-b hover:bg-gray-50">
+                                                                <template x-for="cell in row">
+                                                                    <td class="px-2 py-1.5 whitespace-nowrap" x-text="cell"></td>
+                                                                </template>
+                                                            </tr>
+                                                        </template>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                     </template>
                                  </div>
                              </template>
                         </div>
@@ -176,8 +207,7 @@
 </div>
 
 <!-- External Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
 
 <script>
     function chatbot() {
@@ -194,9 +224,11 @@
                         this.scrollToBottom();
                         // Render charts after DOM update
                         this.messages.forEach((msg, index) => {
-                            if (!msg.isUser && msg.chartData && !msg.chartRendered) {
-                                this.renderChart(index, msg.chartData);
-                                msg.chartRendered = true; // Prevent re-rendering
+                            if (!msg.isUser && msg.charts && msg.charts.length > 0 && !msg.chartRendered) {
+                                msg.charts.forEach((chart, cIndex) => {
+                                    this.renderChart(index, cIndex, chart);
+                                });
+                                msg.chartRendered = true; 
                             }
                         });
                     });
@@ -251,45 +283,54 @@
                     let rawReply = data.reply;
                     
                     // Parse Special Tags
-                    let chartData = null;
-                    let tableData = null;
+                    let charts = [];
+                    let tables = [];
 
-                    // Detect CHART - match until closing brace before ]]
-                    const chartMatch = rawReply.match(/\[\[CHART:([\s\S]*?)\}\]\]/);
-                    if (chartMatch) {
+                    // Detect ALL CHARTS
+                    // Regex explain: [[CHART: ... }]] 
+                    // We use a loop to find all occurrences
+                    const chartRegex = /\[\[CHART:([\s\S]*?)\}\]\]/g;
+                    let chartMatch;
+                    while ((chartMatch = chartRegex.exec(rawReply)) !== null) {
                         try {
-                            chartData = JSON.parse(chartMatch[1] + '}');
-                            rawReply = rawReply.replace(chartMatch[0], ''); // Remove tag from text
-                        } catch (e) { 
-                            console.error('Chart JSON Error', e); 
-                            console.error('Chart JSON String:', chartMatch[1] + '}');
+                             // chartMatch[1] is the JSON content inside [[CHART: ... }]]
+                             // distinct from the full match chartMatch[0]
+                             const jsonStr = chartMatch[1] + '}';
+                             const chartObj = JSON.parse(jsonStr);
+                             charts.push(chartObj);
+                        } catch (e) {
+                             console.error('Chart JSON Parse Error', e);
                         }
                     }
+                    // Remove all tags from text
+                    rawReply = rawReply.replace(chartRegex, '');
 
-                    // Detect TABLE - match until closing brace before ]]
-                    const tableMatch = rawReply.match(/\[\[TABLE:([\s\S]*?)\}\]\]/);
-                    if (tableMatch) {
+                    // Detect ALL TABLES
+                    const tableRegex = /\[\[TABLE:([\s\S]*?)\}\]\]/g;
+                    let tableMatch;
+                    while ((tableMatch = tableRegex.exec(rawReply)) !== null) {
                         try {
-                            tableData = JSON.parse(tableMatch[1] + '}');
-                            rawReply = rawReply.replace(tableMatch[0], ''); // Remove tag from text
-                        } catch (e) { 
-                            console.error('Table JSON Error', e); 
-                            console.error('Table JSON String:', tableMatch[1] + '}');
+                             const jsonStr = tableMatch[1] + '}';
+                             const tableObj = JSON.parse(jsonStr);
+                             tables.push(tableObj);
+                        } catch (e) {
+                             console.error('Table JSON Parse Error', e);
                         }
                     }
+                    rawReply = rawReply.replace(tableRegex, '');
                     
                     // Format response (simple markdown to HTML conversion)
                     let formattedReply = rawReply
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-600 hover:underline">$1</a>') // Links
-                        .replace(/\n/g, '<br>'); // Newlines
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-600 hover:underline">$1</a>')
+                        .replace(/\n/g, '<br>');
 
                     // Push Bot Message with structured data
                     this.messages.push({
                         text: formattedReply,
                         isUser: false,
-                        chartData: chartData,
-                        tableData: tableData,
+                        charts: charts, // Array of charts
+                        tables: tables, // Array of tables
                         chartRendered: false,
                         timestamp: new Date()
                     });
@@ -306,40 +347,67 @@
                 }
             },
 
-            renderChart(index, data) {
-                const canvasId = `chart-${index}`;
-                const ctx = document.getElementById(canvasId);
+            renderChart(index, cIndex, data) {
+                const canvasId = `chart-${index}-${cIndex}`;
                 
-                if (ctx && window.Chart) {
-                    new window.Chart(ctx, {
-                        type: data.type || 'bar',
-                        data: {
-                            labels: data.labels,
-                            datasets: [{
-                                label: data.title || 'Data Statistik',
-                                data: data.data,
-                                backgroundColor: [
-                                    'rgba(59, 130, 246, 0.7)',
-                                    'rgba(16, 185, 129, 0.7)', 
-                                    'rgba(245, 158, 11, 0.7)',
-                                    'rgba(239, 68, 68, 0.7)',
-                                    'rgba(139, 92, 246, 0.7)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { display: false },
-                                title: { display: !!data.title, text: data.title }
+                // Wait for element to actually exist in DOM
+                this.$nextTick(() => {
+                    const ctx = document.getElementById(canvasId);
+                    
+                    console.log(`Rendering Chart: ${canvasId}`, data); 
+
+                    if (!ctx) {
+                        console.error(`Canvas ${canvasId} not found`);
+                        return;
+                    }
+
+                    if (typeof Chart === 'undefined') {
+                        console.error('Chart.js not loaded');
+                        return;
+                    }
+
+                    // Destroy existing if any (prevent overlap)
+                    const existingChart = Chart.getChart(ctx);
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+
+                    try {
+                        new Chart(ctx, {
+                            type: data.type || 'bar',
+                            data: {
+                                labels: data.labels,
+                                datasets: [{
+                                    label: data.title || 'Data Statistik',
+                                    data: data.data,
+                                    backgroundColor: [
+                                        'rgba(59, 130, 246, 0.7)',
+                                        'rgba(16, 185, 129, 0.7)', 
+                                        'rgba(245, 158, 11, 0.7)',
+                                        'rgba(239, 68, 68, 0.7)',
+                                        'rgba(139, 92, 246, 0.7)'
+                                    ],
+                                    borderWidth: 1,
+                                    borderColor: 'rgba(59, 130, 246, 1)',
+                                }]
                             },
-                            scales: {
-                                y: { beginAtZero: true }
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false },
+                                    title: { display: !!data.title, text: data.title }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true }
+                                }
                             }
-                        }
-                    });
-                }
+                        });
+                        console.log(`Chart ${canvasId} rendered successfully`);
+                    } catch (err) {
+                        console.error('Chart Render Error:', err);
+                    }
+                });
             },
 
             downloadExcel(data) {
