@@ -342,9 +342,13 @@ class EvaluasiController extends Controller
     public function logout()
     {
         session()->forget('evaluasi_authenticated');
-        // Clear target session too
         session()->forget('evaluasi_target_id');
-        return redirect()->route('dashboard'); // Back to main dashboard
+
+        if (auth('bps')->check()) {
+            return redirect()->route('bps.dashboard');
+        }
+
+        return redirect()->route('dashboard');
     }
 
     private function getTargetUser()

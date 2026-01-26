@@ -138,6 +138,15 @@ Route::prefix('bps')->name('bps.')->group(function () {
         Route::get('/schedule/{id}/edit', [App\Http\Controllers\BpsStaff\CoachingScheduleController::class, 'edit'])->name('schedule.edit');
         Route::put('/schedule/{id}', [App\Http\Controllers\BpsStaff\CoachingScheduleController::class, 'update'])->name('schedule.update');
         Route::delete('/schedule/{id}', [App\Http\Controllers\BpsStaff\CoachingScheduleController::class, 'destroy'])->name('schedule.destroy');
+        
+        // BPS Live Chat
+        Route::get('/live-chat', [App\Http\Controllers\BpsStaff\BpsStaffChatController::class, 'index'])->name('live-chat');
+        Route::prefix('chat')->name('chat.')->group(function() {
+             Route::get('/conversations', [App\Http\Controllers\BpsStaff\BpsStaffChatController::class, 'getConversations']);
+             Route::get('/conversations/{id}/messages', [App\Http\Controllers\BpsStaff\BpsStaffChatController::class, 'getMessages']);
+             Route::post('/conversations/{id}/messages', [App\Http\Controllers\BpsStaff\BpsStaffChatController::class, 'sendMessage']);
+             Route::post('/conversations/{id}/close', [App\Http\Controllers\BpsStaff\BpsStaffChatController::class, 'closeConversation']);
+        });
     });
 });
 
