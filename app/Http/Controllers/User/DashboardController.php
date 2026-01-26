@@ -52,17 +52,11 @@ class DashboardController extends Controller
 
     public function pembinaan()
     {
-        // Mock Data for Pembinaan Page
-        $schedules = [
-            ['date' => '2024-02-12', 'topic' => 'Standar Data Statistik', 'status' => 'Upcoming'],
-            ['date' => '2024-03-05', 'topic' => 'Metadata Statistik', 'status' => 'Pending'],
-        ];
+        $user = request()->user();
+        
+        // Fetch Documents grouped by category
+        $documents = $user->documents->groupBy('category');
 
-        $materials = [
-            ['title' => 'Panduan EPSS 2024', 'type' => 'PDF', 'size' => '2.5 MB'],
-            ['title' => 'Template Metadata', 'type' => 'XLSX', 'size' => '1.2 MB'],
-        ];
-
-        return view('user.pembinaan', compact('schedules', 'materials'));
+        return view('user.pembinaan', compact('documents'))->with('header', 'Menu Pembinaan');
     }
 }

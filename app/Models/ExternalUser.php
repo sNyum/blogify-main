@@ -22,6 +22,11 @@ class ExternalUser extends Authenticatable
         'is_verified',
         'is_active',
         'last_login_at',
+        'status',
+        'surat_permohonan_path',
+        'approved_by',
+        'approved_at',
+        'rejection_reason',
     ];
 
     protected $hidden = [
@@ -35,8 +40,17 @@ class ExternalUser extends Authenticatable
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
             'last_login_at' => 'datetime',
+            'approved_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Automatically uppercase organization name when setting.
+     */
+    protected function setOrganizationAttribute($value): void
+    {
+        $this->attributes['organization'] = strtoupper($value);
     }
 
     /**
@@ -53,6 +67,14 @@ class ExternalUser extends Authenticatable
     public function conversations(): HasMany
     {
         return $this->hasMany(ChatConversation::class);
+    }
+
+    /**
+     * Get all coaching documents for this user.
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(CoachingDocument::class);
     }
 
     /**
@@ -78,6 +100,71 @@ class ExternalUser extends Authenticatable
     public function scopeVerified($query)
     {
         return $query->where('is_verified', true);
+    }
+
+    /**
+     * Scope to get pending registrations.
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    /**
+     * Scope to get approved registrations.
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    /**
+     * Scope to get rejected registrations.
+     */
+    public function scopeRejected($query)
+    {
+        return $query->where('status', 'rejected');
+    }
+
+    /**
+     * Get the admin who approved this registration.
+     */
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Check if registration is pending.
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Check if registration is approved.
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === 'approved';
+    }
+
+    /**
+     * Mask WhatsApp number for public display.
+     */
+    public function getMaskedPhoneAttribute(): string
+    {
+        if (!$this->phone) {
+            return '';
+        }
+        
+        $length = strlen($this->phone);
+        if ($length <= 3) {
+            return str_repeat('x', $length);
+        }
+        
+        return str_repeat('x', $length - 3) . substr($this->phone, -3);
     }
 
     /**

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - BPS Kabupaten Batanghari</title>
+    <title>Login BPS Admin - Bistik Kaldu</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -20,11 +20,12 @@
             <!-- Logo/Header -->
             <div class="text-center mb-8">
                 <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo BPS" class="h-20 w-auto mx-auto mb-4">
-                <h1 class="text-3xl font-bold text-gray-800">Login</h1>
+                <h1 class="text-3xl font-bold text-gray-800">BPS Admin</h1>
+                <p class="text-gray-600 mt-2">Bistik Kaldu - Kabupaten Batanghari</p>
             </div>
 
             <!-- Success Message -->
-            @if (session('success'))
+            @if(session('success'))
                 <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
                     {{ session('success') }}
                 </div>
@@ -42,7 +43,7 @@
             @endif
 
             <!-- Login Form -->
-            <form method="POST" action="{{ route('login') }}" id="loginForm">
+            <form method="POST" action="{{ route('bps-admin.login') }}">
                 @csrf
 
                 <!-- Email -->
@@ -60,11 +61,9 @@
                 </div>
 
                 <!-- Remember Me -->
-                <div class="flex items-center justify-between mb-6">
-                    <label class="flex items-center">
-                        <input type="checkbox" name="remember" class="rounded border-gray-300 text-[#F15A24] focus:ring-[#F15A24]">
-                        <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
-                    </label>
+                <div class="mb-6 flex items-center">
+                    <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-[#F15A24] focus:ring-[#F15A24] border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-700">Ingat saya</label>
                 </div>
 
                 <!-- Submit Button -->
@@ -74,19 +73,8 @@
                 </button>
             </form>
 
-            <!-- Register Link -->
-            <div class="mt-6 text-center">
-                <p class="text-gray-600 text-sm mb-3">
-                    Belum punya akun?
-                </p>
-                <a href="{{ route('register') }}" 
-                   class="inline-block w-full px-6 py-3 bg-white text-primary font-bold rounded-lg border-2 border-primary hover:bg-primary hover:text-white transition duration-300 shadow-lg">
-                    Daftar Sekarang
-                </a>
-            </div>
-
             <!-- Back to Home -->
-            <div class="mt-4 text-center">
+            <div class="mt-6 text-center">
                 <a href="{{ route('landing') }}" class="text-gray-500 hover:text-gray-700 text-sm">
                     ← Kembali ke Beranda
                 </a>

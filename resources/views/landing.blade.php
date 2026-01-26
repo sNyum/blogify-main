@@ -36,8 +36,12 @@
                         Pustaka
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="#konsultasi" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
+                    <a href="/konsultasi" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
                         Konsultasi
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="/pendaftaran" class="nav-link relative text-sm font-medium text-gray-700 hover:text-primary transition-all duration-300 group">
+                        Pendaftaran
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary-hover group-hover:w-full transition-all duration-300"></span>
                     </a>
                     
@@ -75,9 +79,36 @@
                             </div>
                         </div>
                     @else
-                        <button onclick="openLoginModal()" class="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary to-primary-hover rounded-full hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-0.5 ml-2 transition-all duration-300">
-                            Login
-                        </button>
+                        @auth('bps')
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-green-600 transition-colors">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-green-600 to-green-700 rounded-full flex items-center justify-center text-white font-semibold">
+                                        {{ substr(auth('bps')->user()->name, 0, 1) }}
+                                    </div>
+                                    <span class="hidden lg:inline">{{ auth('bps')->user()->name }}</span>
+                                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                
+                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
+                                    <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">Pengguna BPS</div>
+                                    <a href="{{ route('bps.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors">
+                                        Dashboard
+                                    </a>
+                                    <form action="{{ route('bps.logout') }}" method="POST" class="block">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @else
+                            <button onclick="openLoginModal()" class="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary to-primary-hover rounded-full hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-0.5 ml-2 transition-all duration-300">
+                                Login
+                            </button>
+                        @endauth
                     @endauth
                 </div>
 
@@ -101,7 +132,8 @@
                 <a href="#modul-sektoral" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Modul Sektoral</a>
                 <a href="#berita" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Berita</a>
                 <a href="#pustaka" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Pustaka</a>
-                <a href="#konsultasi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Konsultasi</a>
+                <a href="/konsultasi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Konsultasi</a>
+                <a href="/pendaftaran" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-orange-50">Pendaftaran</a>
                 
                 @auth('external')
                      <a href="/chat" class="block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-orange-50 font-bold">Live Chat</a>
@@ -114,9 +146,20 @@
                         </form>
                      </div>
                 @else
-                    <button onclick="openLoginModal()" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-orange-50 font-bold">
-                        Login
-                    </button>
+                    @auth('bps')
+                        <div class="border-t border-gray-100 my-2 pt-2">
+                            <div class="px-3 py-2 text-sm text-gray-500">Pengguna BPS: {{ auth('bps')->user()->name }}</div>
+                            <a href="{{ route('bps.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50">Dashboard</a>
+                            <form action="{{ route('bps.logout') }}" method="POST" class="block">
+                                @csrf
+                                <button type="submit" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50">Logout</button>
+                            </form>
+                        </div>
+                    @else
+                        <button onclick="openLoginModal()" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-orange-50 font-bold">
+                            Login
+                        </button>
+                    @endauth
                 @endauth
             </div>
         </div>
@@ -132,17 +175,28 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-2">Pilih Jenis Login</h3>
                 <p class="text-gray-600">Silakan pilih akses Anda</p>
             </div>
-            <div class="space-y-4">
-                <a href="/admin/login" class="group block w-full p-6 bg-gradient-to-r from-secondary to-blue-800 hover:from-blue-700 hover:to-blue-900 rounded-xl transition-all duration-300 shadow-lg text-white">
+            <div class="space-y-3">
+                <!-- Login Admin BPS -->
+                <a href="/admin/login" class="group block w-full p-5 bg-gradient-to-r from-secondary to-blue-800 hover:from-blue-700 hover:to-blue-900 rounded-xl transition-all duration-300 shadow-lg text-white">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg></div>
-                        <div class="text-left"><h4 class="font-bold">Login Admin</h4><p class="text-xs text-blue-200">Panel Administrasi</p></div>
+                        <div class="text-left"><h4 class="font-bold text-base">Login Admin</h4><p class="text-xs text-blue-200">Panel Administrasi BPS</p></div>
                     </div>
                 </a>
-                <a href="/login" class="group block w-full p-6 bg-white border-2 border-primary/20 hover:border-primary rounded-xl transition-all duration-300 shadow-sm hover:shadow-lg">
+                
+                <!-- Login Pengguna BPS (Staff Internal) -->
+                <a href="/bps/login" class="group block w-full p-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-xl transition-all duration-300 shadow-lg text-white">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center"><svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div>
-                        <div class="text-left"><h4 class="font-bold text-gray-900">Login User</h4><p class="text-xs text-gray-500">Akses Layanan Agency/OPD</p></div>
+                        <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg></div>
+                        <div class="text-left"><h4 class="font-bold text-base">Login Pengguna BPS</h4><p class="text-xs text-green-200">Pegawai BPS Internal</p></div>
+                    </div>
+                </a>
+                
+                <!-- Login User External (Agency/OPD) -->
+                <a href="/login" class="group block w-full p-5 bg-gradient-to-r from-primary to-orange-600 hover:from-orange-600 hover:to-primary rounded-xl transition-all duration-300 shadow-lg text-white">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div>
+                        <div class="text-left"><h4 class="font-bold text-base">Login User</h4><p class="text-xs text-orange-200">Akses Layanan Agency/OPD</p></div>
                     </div>
                 </a>
             </div>

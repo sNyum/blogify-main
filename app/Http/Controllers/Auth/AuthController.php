@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -37,9 +38,9 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:external_users',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'required|string|max:20',
             'organization' => 'required|string|max:255',
+            'surat_permohonan' => 'required|file|mimes:pdf|max:2048', // 2MB max
         ]);
 
         if ($validator->fails()) {
@@ -52,14 +53,24 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Handle PDF upload
+        $suratPath = null;
+        if ($request->hasFile('surat_permohonan')) {
+            $file = $request->file('surat_permohonan');
+            $filename = time() . '_' . str_replace(' ', '_', $request->organization) . '.pdf';
+            $suratPath = $file->storeAs('surat_permohonan', $filename, 'public');
+        }
+
         $user = ExternalUser::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make(Str::random(16)), // Temporary password, will be set on approval
             'phone' => $request->phone,
             'organization' => $request->organization,
-            'is_verified' => true, // Auto-verify for now
-            'is_active' => true,
+            'surat_permohonan_path' => $suratPath,
+            'status' => 'pending', // Pending approval
+            'is_verified' => false,
+            'is_active' => false,
         ]);
 
         // Create user profile
@@ -67,21 +78,16 @@ class AuthController extends Controller
             'external_user_id' => $user->id,
         ]);
 
-        // Generate token
-        $token = $user->createToken('auth-token')->plainTextToken;
-
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'user' => $user,
-                'token' => $token,
+                'message' => 'Pendaftaran berhasil terkirim. Menunggu persetujuan BPS.',
             ], 201);
         }
 
-        // Login the user
-        Auth::guard('external')->login($user);
-        
-        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil! Selamat datang.');
+        // Redirect to pendaftaran page with success message
+        return redirect()->route('pendaftaran.index')
+            ->with('success', 'Pendaftaran berhasil terkirim! Silakan tunggu persetujuan dari BPS. Akun akan dikirimkan via WhatsApp.');
     }
 
     /**

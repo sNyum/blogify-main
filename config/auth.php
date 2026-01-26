@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'external_users',
         ],
+        'bps' => [
+            'driver' => 'session',
+            'provider' => 'bps_staff',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'external_users' => [
             'driver' => 'eloquent',
             'model' => App\Models\ExternalUser::class,
+        ],
+        'bps_staff' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\BpsStaff::class,
         ],
 
         // 'users' => [

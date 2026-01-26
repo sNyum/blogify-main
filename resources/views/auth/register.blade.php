@@ -4,23 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Register - BPS Kabupaten Batanghari</title>
+    <title>Pendaftaran Pembinaan - BPS Kabupaten Batanghari</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background-color: #f5f5f5;
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl">
         <!-- Card -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8">
+        <div class="bg-[#FFF5E6] rounded-lg shadow-lg p-8">
             <!-- Logo/Header -->
-            <div class="text-center mb-8">
-                <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo BPS" class="h-20 w-auto mx-auto mb-4">
-                <h1 class="text-3xl font-bold text-gray-800">Registrasi</h1>
+            <div class="text-center mb-6">
+                <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo BPS" class="h-16 w-auto mx-auto mb-4">
+                <h1 class="text-2xl font-bold text-gray-800">Pendaftaran Pembinaan Statistik Sektoral</h1>
             </div>
 
             <!-- Error Messages -->
@@ -35,56 +34,74 @@
             @endif
 
             <!-- Registration Form -->
-            <form method="POST" action="{{ route('register') }}" id="registerForm">
+            <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                 @csrf
 
-                <!-- Name -->
+                <!-- Nama Instansi/OPD -->
                 <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                    <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
-                </div>
-
-                <!-- Email -->
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
-                </div>
-
-                <!-- Phone -->
-                <div class="mb-4">
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">No. Telepon</label>
-                    <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
-                </div>
-
-                <!-- Organization -->
-                <div class="mb-4">
-                    <label for="organization" class="block text-sm font-medium text-gray-700 mb-2">Nama Instansi/Kantor</label>
+                    <label for="organization" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nama Instansi/OPD (Gunakan Kapital Tanpa Dingbat)*
+                    </label>
                     <input type="text" id="organization" name="organization" value="{{ old('organization') }}" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+                           placeholder="CONTOH: DINAS PENDIDIKAN KOTA BATANGHARI"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition uppercase">
                 </div>
 
-                <!-- Password -->
+                <!-- Surat Permohonan Pembinaan -->
                 <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input type="password" id="password" name="password" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
-                    <p class="text-xs text-gray-500 mt-1">Minimal 8 karakter</p>
+                    <label for="surat_permohonan" class="block text-sm font-medium text-gray-700 mb-2">
+                        Surat Permohonan Pembinaan (Format PDF)*
+                    </label>
+                    <div class="mb-2">
+                        <a href="{{ route('pendaftaran.download-template') }}" 
+                           class="inline-flex items-center px-4 py-2 bg-secondary text-white text-sm font-medium rounded hover:bg-secondary-hover transition">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download Format Surat
+                        </a>
+                    </div>
+                    <input type="file" id="surat_permohonan" name="surat_permohonan" accept=".pdf" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                    <p class="text-xs text-gray-500 mt-1">Format: PDF, Maksimal 2MB</p>
                 </div>
 
-                <!-- Confirm Password -->
+                <!-- Nama PIC -->
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nama PIC Instansi/OPD*
+                    </label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                </div>
+
+                <!-- Email (hidden but required for login) -->
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        Email PIC*
+                    </label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                           placeholder="contoh@email.com"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F15A24] focus:border-transparent transition">
+                    <p class="text-xs text-gray-500 mt-1">Email akan digunakan untuk login</p>
+                </div>
+
+                <!-- Nomor WA PIC -->
                 <div class="mb-6">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nomor WA PIC Instansi/OPD (Contoh: 628xxxxx)*
+                    </label>
+                    <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required
+                           placeholder="628123456789"
+                           pattern="[0-9]{10,15}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                    <p class="text-xs text-gray-500 mt-1">Gunakan format 628xxx (tanpa +)</p>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit"
-                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition duration-300 shadow-lg">
-                    Daftar Sekarang
+                        class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary-hover transition duration-300 shadow-lg">
+                    Kirim Pendaftaran
                 </button>
             </form>
 
@@ -92,14 +109,14 @@
             <div class="mt-6 text-center">
                 <p class="text-gray-600 text-sm">
                     Sudah punya akun? 
-                    <a href="{{ route('login') }}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Login di sini</a>
+                    <a href="{{ route('login') }}" class="text-primary hover:text-primary-hover font-semibold">Login di sini</a>
                 </p>
             </div>
 
             <!-- Back to Home -->
             <div class="mt-4 text-center">
-                <a href="{{ route('landing') }}" class="text-gray-500 hover:text-gray-700 text-sm">
-                    ← Kembali ke Beranda
+                <a href="{{ route('pendaftaran.index') }}" class="text-gray-500 hover:text-gray-700 text-sm">
+                    ← Lihat Data Pendaftar
                 </a>
             </div>
         </div>
