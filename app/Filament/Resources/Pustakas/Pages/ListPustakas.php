@@ -16,4 +16,15 @@ class ListPustakas extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'created_at';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
+    }
+
 }

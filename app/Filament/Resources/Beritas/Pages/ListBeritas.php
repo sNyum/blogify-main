@@ -16,4 +16,15 @@ class ListBeritas extends ListRecords
             CreateAction::make(),
         ];
     }
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'created_at';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
+    }
+
 }
