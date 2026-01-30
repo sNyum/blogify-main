@@ -22,6 +22,11 @@ class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'User';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);

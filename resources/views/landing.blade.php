@@ -164,9 +164,9 @@
         </div>
     </nav>
 
-    <!-- Login Modal (Preserved) -->
+    <!-- Login Modal (3 Options) -->
     <div id="loginModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -176,7 +176,7 @@
             </div>
             <div class="space-y-3">
                 <!-- Login Admin BPS -->
-                <a href="/login-select" class="group block w-full p-5 bg-gradient-to-r from-secondary to-blue-800 hover:from-blue-700 hover:to-blue-900 rounded-xl transition-all duration-300 shadow-lg text-white">
+                <a href="/admin/login" class="group block w-full p-5 bg-gradient-to-r from-secondary to-blue-800 hover:from-blue-700 hover:to-blue-900 rounded-xl transition-all duration-300 shadow-lg text-white">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg></div>
                         <div class="text-left"><h4 class="font-bold text-base">Login Admin</h4><p class="text-xs text-blue-200">Panel Administrasi BPS</p></div>
