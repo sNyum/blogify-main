@@ -19,6 +19,7 @@ class ExternalUser extends Authenticatable
         'password',
         'phone',
         'organization',
+        'address',
         'is_verified',
         'is_active',
         'last_login_at',

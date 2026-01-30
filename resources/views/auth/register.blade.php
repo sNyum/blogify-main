@@ -18,7 +18,7 @@
         <div class="bg-[#FFF5E6] rounded-lg shadow-lg p-8">
             <!-- Logo/Header -->
             <div class="text-center mb-6">
-                <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo BPS" class="h-16 w-auto mx-auto mb-4">
+                <img src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU" class="h-16 w-auto mx-auto mb-4">
                 <h1 class="text-2xl font-bold text-gray-800">Pendaftaran Pembinaan Statistik Sektoral</h1>
             </div>
 

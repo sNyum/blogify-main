@@ -10,11 +10,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 <body class="bg-background-soft font-sans antialiased text-gray-800" x-data="{ sidebarOpen: false }">
     
     <!-- Sidebar (Mobile: Off-canvas, Desktop: Fixed) -->
-    <div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
+    <div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="hidden fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
 
     <!-- Main Content Wrapper -->
     <div class="flex h-screen overflow-hidden bg-background-soft">
@@ -22,10 +25,9 @@
         <!-- Sidebar (Mobile: Off-canvas, Desktop: Static in Flex) -->
         <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-white border-r border-gray-200 lg:translate-x-0 lg:static lg:inset-0 lg:block shadow-xl lg:shadow-none font-medium">
             <!-- Sidebar Header -->
-            <div class="flex items-center justify-center h-20 shadow-sm border-b border-gray-100 bg-white">
-                <a href="/" class="flex items-center gap-2 px-4">
-                    <img class="h-8 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="Logo">
-                    <span class="text-sm font-bold text-gray-700 tracking-wide">BISTIK KALDU</span>
+            <div class="flex items-center justify-center py-6 border-b border-gray-100 bg-white">
+                <a href="/" class="flex flex-col items-center">
+                    <img class="w-full max-w-[260px] h-auto px-4" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU - Pembinaan Statistik Sektoral Terpadu Kabupaten Batang Hari">
                 </a>
             </div>
 
@@ -147,5 +149,34 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Safety script to prevent ghost overlays
+            const cleanOverlays = () => {
+                const width = window.innerWidth;
+                const modal = document.getElementById('globalLoginModal');
+                // Remove global login modal if present in dashboard
+                if (modal && !window.location.search.includes('login')) {
+                    modal.style.display = 'none';
+                }
+
+                // Remove mobile sidebar overlay on desktop
+                if (width >= 1024) { 
+                    document.querySelectorAll('.fixed.inset-0.bg-black').forEach(el => {
+                        // Only hide if it's the sidebar overlay (z-20) or if it's blocking interaction
+                        if (el.classList.contains('z-20') || el.classList.contains('opacity-50')) {
+                            el.style.display = 'none';
+                        }
+                    });
+                }
+            };
+            
+            cleanOverlays();
+            window.addEventListener('resize', cleanOverlays);
+            
+            // Also run once after a short delay for slow loading frameworks
+            setTimeout(cleanOverlays, 500);
+        });
+    </script>
 </body>
 </html>

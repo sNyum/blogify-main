@@ -15,11 +15,11 @@
             <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 md:gap-12">
                 <!-- Left Content: Logo & Contact Info -->
                 <div class="flex-1 space-y-4 sm:space-y-6 text-center md:text-left w-full">
-                    <!-- BPS Logo -->
+                    <!-- BISTIK KALDU Logo -->
                     <div class="flex justify-center md:justify-start">
-                        <img class="h-14 sm:h-16 w-auto transform hover:scale-105 transition-transform duration-300 filter drop-shadow-lg" 
-                             src="{{ asset('images/bps-logo-footer.png') }}" 
-                             alt="Badan Pusat Statistik Kabupaten Batanghari">
+                        <img class="h-24 sm:h-32 w-auto transform hover:scale-105 transition-transform duration-300 filter drop-shadow-lg" 
+                             src="{{ asset('images/bistik-kaldu-footer-logo.png') }}" 
+                             alt="BISTIK KALDU - Pembinaan Statistik Sektoral Terpadu Kabupaten Batang Hari">
                     </div>
 
                     <!-- Contact Information -->

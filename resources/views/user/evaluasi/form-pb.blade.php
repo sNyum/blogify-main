@@ -38,7 +38,7 @@
 
             <!-- Card PB -->
             <div class="bg-white rounded-lg shadow-sm border border-green-100 p-6 mb-6">
-                <h3 class="font-bold text-[#1A237E] mb-4">Penilaian Badan (PB)</h3>
+                <h3 class="font-bold text-[#1A237E] mb-4">Verifikasi Hasil Penilaian Indikator</h3>
                 <div class="space-y-3">
                     @php $val = $score->score_pb ?? 0; @endphp
                     
@@ -66,6 +66,48 @@
                 @error('score_pb')
                     <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <!-- Nilai Pemeriksaan -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                <h4 class="font-bold text-[#1A237E] mb-3">Nilai Pemeriksaan</h4>
+                <select name="nilai_pemeriksaan" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">-- Pilih Nilai --</option>
+                    <option value="1" {{ ($score->nilai_pemeriksaan ?? '') == '1' ? 'selected' : '' }}>1</option>
+                    <option value="2" {{ ($score->nilai_pemeriksaan ?? '') == '2' ? 'selected' : '' }}>2</option>
+                    <option value="3" {{ ($score->nilai_pemeriksaan ?? '') == '3' ? 'selected' : '' }}>3</option>
+                    <option value="4" {{ ($score->nilai_pemeriksaan ?? '') == '4' ? 'selected' : '' }}>4</option>
+                    <option value="5" {{ ($score->nilai_pemeriksaan ?? '') == '5' ? 'selected' : '' }}>5</option>
+                </select>
+                @error('nilai_pemeriksaan')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Catatan Penilaian Data -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                <h4 class="font-bold text-[#1A237E] mb-3">Catatan Penilaian Data</h4>
+                <textarea name="catatan_pb" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Masukkan catatan penilaian...">{{ $score->catatan_pb ?? '' }}</textarea>
+                @error('catatan_pb')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Lihat Bukti Dukung -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                <h4 class="font-bold text-[#1A237E] mb-3">Lihat Bukti Dukung</h4>
+                <div class="flex gap-3">
+                    @if(isset($score->evidence_link) && $score->evidence_link)
+                        <a href="{{ $score->evidence_link }}" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded shadow-sm text-sm transition">
+                            TAMPILKAN
+                        </a>
+                        <a href="{{ $score->evidence_link }}" download class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded shadow-sm text-sm transition">
+                            UNDUH
+                        </a>
+                    @else
+                        <p class="text-gray-500 text-sm italic">Tidak ada bukti dukung yang tersedia</p>
+                    @endif
+                </div>
             </div>
 
             <!-- Buttons -->

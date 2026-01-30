@@ -15,11 +15,9 @@
     <nav class="absolute top-0 w-full z-10">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
                 <div class="flex-shrink-0">
-                    <a href="/" class="flex items-center gap-3">
-                        <img class="h-10 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="BPS Logo">
-                        <span class="font-bold text-xl text-primary tracking-wide">BISTIK KALDU</span>
+                    <a href="/" class="transform hover:scale-105 transition-transform duration-300">
+                        <img class="h-20 w-auto" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU">
                     </a>
                 </div>
                 

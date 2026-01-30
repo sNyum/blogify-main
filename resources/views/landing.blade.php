@@ -16,9 +16,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div id="nav-content" class="flex justify-between h-20 transition-all duration-500">
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-                        <img id="nav-logo" class="h-10 w-auto transition-all duration-500" src="{{ asset('images/bps-logo-full.png') }}" alt="BPS Logo">
-                        <span class="font-bold text-xl text-primary tracking-wide hidden md:block">BISTIK KALDU</span>
+                    <a href="/" class="transform hover:scale-105 transition-transform duration-300">
+                        <img id="nav-logo" class="h-20 w-auto transition-all duration-500" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU">
                     </a>
                 </div>
 
@@ -177,7 +176,7 @@
             </div>
             <div class="space-y-3">
                 <!-- Login Admin BPS -->
-                <a href="/admin/login" class="group block w-full p-5 bg-gradient-to-r from-secondary to-blue-800 hover:from-blue-700 hover:to-blue-900 rounded-xl transition-all duration-300 shadow-lg text-white">
+                <a href="/login-select" class="group block w-full p-5 bg-gradient-to-r from-secondary to-blue-800 hover:from-blue-700 hover:to-blue-900 rounded-xl transition-all duration-300 shadow-lg text-white">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg></div>
                         <div class="text-left"><h4 class="font-bold text-base">Login Admin</h4><p class="text-xs text-blue-200">Panel Administrasi BPS</p></div>

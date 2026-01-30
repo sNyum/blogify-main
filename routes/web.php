@@ -9,6 +9,10 @@ use App\Http\Controllers\Chat\ChatController;
 
 Route::get('/', [App\Http\Controllers\LandingController::class, 'index'])->name('landing');
 
+// Login Selection Page
+// Login Selection Page
+Route::get('/login-select', [App\Http\Controllers\Auth\LoginSelectController::class, 'index'])->name('login.select');
+
 // Authentication Routes
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
@@ -61,6 +65,9 @@ Route::group([], function () {
      Route::post('/dashboard/evaluasi/pengguna/profil', [App\Http\Controllers\User\EvaluasiController::class, 'updateProfil'])->name('evaluasi.pengguna.update-profil');
      
      Route::get('/dashboard/evaluasi/pengguna/daftar', [App\Http\Controllers\User\EvaluasiController::class, 'daftarPengguna'])->name('evaluasi.pengguna.index');
+     Route::post('/dashboard/evaluasi/pengguna/daftar', [App\Http\Controllers\User\EvaluasiController::class, 'storePengguna'])->name('evaluasi.pengguna.store');
+     Route::put('/dashboard/evaluasi/pengguna/daftar/{id}', [App\Http\Controllers\User\EvaluasiController::class, 'updatePengguna'])->name('evaluasi.pengguna.update');
+     Route::delete('/dashboard/evaluasi/pengguna/daftar/{id}', [App\Http\Controllers\User\EvaluasiController::class, 'destroyPengguna'])->name('evaluasi.pengguna.destroy');
      
      Route::get('/dashboard/evaluasi/pengguna/password', [App\Http\Controllers\User\EvaluasiController::class, 'ubahPassword'])->name('evaluasi.pengguna.password');
      Route::post('/dashboard/evaluasi/pengguna/password', [App\Http\Controllers\User\EvaluasiController::class, 'updatePassword'])->name('evaluasi.pengguna.update-password');
@@ -69,6 +76,9 @@ Route::group([], function () {
      
      // Instansi Management (BPS Only)
      Route::get('/dashboard/evaluasi/instansi', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'index'])->name('evaluasi.instansi.index');
+     Route::post('/dashboard/evaluasi/instansi', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'store'])->name('evaluasi.instansi.store');
+     Route::put('/dashboard/evaluasi/instansi/{id}', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'update'])->name('evaluasi.instansi.update');
+     Route::delete('/dashboard/evaluasi/instansi/{id}', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'destroy'])->name('evaluasi.instansi.destroy');
      Route::get('/dashboard/evaluasi/instansi/{id}/nilai', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'setTarget'])->name('evaluasi.instansi.nilai');
      Route::get('/dashboard/evaluasi/instansi/hasil', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'hasilPenilaian'])->name('evaluasi.instansi.hasil');
      Route::get('/dashboard/evaluasi/instansi/hasil', [App\Http\Controllers\User\EvaluasiInstansiController::class, 'hasilPenilaian'])->name('evaluasi.instansi.hasil');

@@ -21,7 +21,7 @@
         <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-white border-r border-gray-200 lg:translate-x-0 lg:static lg:inset-0 lg:block shadow-xl lg:shadow-none font-medium">
             <!-- Sidebar Header -->
             <div class="flex items-center justify-center h-20 shadow-sm border-b border-gray-100 bg-white">
-                <a href="#" class="flex items-center gap-2 px-4">
+                <a href="/" class="flex items-center gap-2 px-4">
                     <img class="h-8 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="Logo">
                     <span class="text-sm font-bold text-gray-700 tracking-wide">BISTIK ADMIN</span>
                 </a>

@@ -153,7 +153,7 @@
             <!-- Loading Indicator -->
             <div x-show="isLoading" class="flex gap-3 mt-4">
                 <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0 border border-orange-200">
-                    <img src="{{ asset('images/bps-logo-full.png') }}" class="w-5 h-5 object-contain" alt="Bot">
+                    <img src="{{ asset('images/bistik-kaldu-logo.png') }}" class="w-5 h-5 object-contain" alt="Bot">
                 </div>
                 <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 w-16 flex items-center justify-center gap-1">
                     <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>

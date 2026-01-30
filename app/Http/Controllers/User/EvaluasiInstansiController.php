@@ -19,6 +19,71 @@ class EvaluasiInstansiController extends Controller
         return view('user.evaluasi.instansi.index', compact('instansis', 'user'));
     }
 
+    public function store(Request $request)
+    {
+        if (!auth('bps')->check()) abort(403);
+
+        $request->validate([
+            'organization' => 'required|string|max:255', // Nama Instansi
+            'name' => 'required|string|max:255', // PIC
+            'email' => 'required|email|unique:external_users,email',
+            'password' => 'required|string|min:6',
+            'address' => 'nullable|string',
+        ]);
+
+        $user = new ExternalUser();
+        $user->organization = $request->organization;
+        $user->name = $request->name; // PIC
+        $user->email = $request->email;
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        $user->address = $request->address;
+        $user->is_active = true;
+        $user->is_verified = true;
+        $user->status = 'approved';
+        $user->approved_at = now();
+        $user->save();
+
+        return redirect()->back()->with('success', 'Instansi berhasil ditambahkan');
+    }
+
+    public function update(Request $request, $id)
+    {
+        if (!auth('bps')->check()) abort(403);
+
+        $user = ExternalUser::findOrFail($id);
+
+        $request->validate([
+            'organization' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255', // PIC Optional on Edit
+            'email' => 'required|email|unique:external_users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'address' => 'nullable|string',
+        ]);
+
+        $user->organization = $request->organization;
+        if ($request->filled('name')) {
+            $user->name = $request->name;
+        }
+        $user->email = $request->email;
+        if ($request->filled('password')) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        $user->address = $request->address;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Data Instansi berhasil diperbarui');
+    }
+
+    public function destroy($id)
+    {
+        if (!auth('bps')->check()) abort(403);
+
+        $user = ExternalUser::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Instansi berhasil dihapus');
+    }
+
     public function setTarget($id)
     {
         if (!auth('bps')->check()) {

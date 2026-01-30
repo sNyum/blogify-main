@@ -16,12 +16,8 @@
         <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto transition duration-300 transform bg-white border-r border-gray-200 lg:translate-x-0 lg:static lg:inset-0 lg:block shadow-xl">
             <!-- Sidebar Header -->
             <div class="flex items-center justify-center py-6 border-b border-gray-100">
-                <a href="#" class="flex flex-col items-center">
-                    <img class="h-12 w-auto mb-2" src="{{ asset('images/bps-logo-full.png') }}" alt="Logo">
-                    <div class="text-center">
-                        <h1 class="font-bold text-gray-800 text-lg leading-tight">BISTIK<br>KALDU</h1>
-                        <p class="text-[10px] text-gray-500 mt-1 uppercase">Pembinaan Statistik Sektoral Terpadu<br>Kabupaten Batang Hari</p>
-                    </div>
+                <a href="{{ auth('bps')->check() ? route('bps.dashboard') : route('dashboard') }}" class="flex flex-col items-center">
+                    <img class="w-full max-w-[260px] h-auto px-4" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU - Pembinaan Statistik Sektoral Terpadu Kabupaten Batang Hari">
                 </a>
             </div>
 
@@ -129,9 +125,9 @@
                     
                     <form action="{{ route('evaluasi.logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="flex w-full items-center px-4 py-2 text-sm font-medium text-red-500 rounded-lg hover:bg-red-50 transition-colors mt-2">
-                             <span class="mr-3"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg></span>
-                            Logout
+                        <button type="submit" class="flex w-full items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100 transition-colors mt-2">
+                             <span class="mr-3"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></span>
+                            Kembali
                         </button>
                     </form>
                 </div>
@@ -152,7 +148,7 @@
                     </button>
                     <span class="ml-4 text-lg font-bold text-gray-800">Evaluasi EPSS</span>
                 </div>
-                <img class="h-8 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="Logo">
+                <img class="h-12 w-auto" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU">
             </header>
 
             <!-- Scrollable Content -->

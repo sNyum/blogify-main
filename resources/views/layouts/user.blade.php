@@ -14,7 +14,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <a href="/" class="transform hover:scale-105 transition-transform duration-300">
-                        <img class="h-10 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="BPS Kabupaten Batanghari">
+                        <img class="h-12 w-auto" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU - Kabupaten Batanghari">
                     </a>
                 </div>
                 <div class="hidden sm:flex sm:items-center sm:gap-8">

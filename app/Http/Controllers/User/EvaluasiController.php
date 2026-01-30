@@ -29,7 +29,8 @@ class EvaluasiController extends Controller
         if ($externalUser && Hash::check($request->password, $externalUser->password)) {
              session(['evaluasi_authenticated' => true]);
              auth('external')->login($externalUser);
-             return redirect()->route('evaluasi.dashboard');
+             // Redirect external users to their user dashboard
+             return redirect()->route('dashboard');
         }
 
         // 2. Try Internal User (BPS Staff)
@@ -40,7 +41,8 @@ class EvaluasiController extends Controller
         if ($internalUser && Hash::check($request->password, $internalUser->password)) {
              session(['evaluasi_authenticated' => true]);
              auth('bps')->login($internalUser);
-             return redirect()->route('evaluasi.dashboard');
+             // Redirect BPS staff to their staff dashboard
+             return redirect()->route('bps.dashboard');
         }
 
         return back()->with('error', 'Username atau Password salah.');
@@ -48,6 +50,11 @@ class EvaluasiController extends Controller
 
     public function dashboard()
     {
+        // Auto-authenticate if user is already logged in via external or bps guard
+        if (auth('external')->check() || auth('bps')->check()) {
+            session(['evaluasi_authenticated' => true]);
+        }
+        
         if (!session('evaluasi_authenticated')) {
             return redirect()->route('evaluasi.login');
         }
@@ -92,6 +99,8 @@ class EvaluasiController extends Controller
 
     public function standarData()
     {
+        $this->ensureEvaluasiAuth();
+        
         if (!session('evaluasi_authenticated')) {
             return redirect()->route('evaluasi.login');
         }
@@ -114,6 +123,8 @@ class EvaluasiController extends Controller
 
     public function editPM()
     {
+        $this->ensureEvaluasiAuth();
+        
         if (!session('evaluasi_authenticated')) {
             return redirect()->route('evaluasi.login');
         }
@@ -158,13 +169,17 @@ class EvaluasiController extends Controller
 
         $request->validate([
              'score_pb' => 'required|numeric|min:1|max:5',
+             'nilai_pemeriksaan' => 'nullable|string',
+             'catatan_pb' => 'nullable|string',
         ]);
 
         $user = $this->getTargetUser(); 
         $domain = 'Prinsip SDI'; 
 
         $data = [
-            'score_pb' => $request->score_pb
+            'score_pb' => $request->score_pb,
+            'nilai_pemeriksaan' => $request->nilai_pemeriksaan,
+            'catatan_pb' => $request->catatan_pb,
         ];
 
         if ($user instanceof \App\Models\ExternalUser) {
@@ -220,6 +235,8 @@ class EvaluasiController extends Controller
 
     public function profil()
     {
+        $this->ensureEvaluasiAuth();
+        
         if (!session('evaluasi_authenticated')) {
             return redirect()->route('evaluasi.login');
         }
@@ -259,6 +276,76 @@ class EvaluasiController extends Controller
         return view('user.evaluasi.pengguna.index', compact('user', 'users'));
     }
 
+    public function storePengguna(Request $request)
+    {
+        $this->authorizeOperator();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:external_users,email',
+            'password' => 'required|string|min:6',
+            'organization' => 'nullable|string|max:100', // Instansi
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $user = new \App\Models\ExternalUser();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->organization = $request->organization;
+        $user->is_active = $request->has('is_active');
+        $user->is_verified = true; // Auto-verify staff-created accounts
+        $user->status = 'approved'; // Auto-approve
+        $user->approved_at = now(); // Set approval timestamp
+        // $user->role = 1; // Default role user OPD
+        $user->save();
+
+        return redirect()->back()->with('success', 'Pengguna berhasil ditambahkan');
+    }
+
+    public function updatePengguna(Request $request, $id)
+    {
+        $this->authorizeOperator();
+
+        $user = \App\Models\ExternalUser::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:external_users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'organization' => 'nullable|string|max:100',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->organization = $request->organization;
+        $user->is_active = $request->has('is_active');
+        $user->save();
+
+        return redirect()->back()->with('success', 'Pengguna berhasil diperbarui');
+    }
+
+    public function destroyPengguna($id)
+    {
+        $this->authorizeOperator();
+
+        $user = \App\Models\ExternalUser::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Pengguna berhasil dihapus');
+    }
+
+    private function authorizeOperator()
+    {
+        if (!session('evaluasi_authenticated') || !auth('bps')->check()) {
+            abort(403, 'Akses Ditolak.');
+        }
+    }
+
     public function ubahPassword()
     {
         if (!session('evaluasi_authenticated')) {
@@ -283,6 +370,8 @@ class EvaluasiController extends Controller
 
     public function nilaiIPS()
     {
+        $this->ensureEvaluasiAuth();
+        
         if (!session('evaluasi_authenticated')) {
             return redirect()->route('evaluasi.login');
         }
@@ -367,5 +456,13 @@ class EvaluasiController extends Controller
         }
 
         return null;
+    }
+
+    private function ensureEvaluasiAuth()
+    {
+        // Auto-authenticate if user is already logged in via external or bps guard
+        if (auth('external')->check() || auth('bps')->check()) {
+            session(['evaluasi_authenticated' => true]);
+        }
     }
 }

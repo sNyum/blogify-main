@@ -17,7 +17,7 @@
                 <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 <span class="font-medium text-sm">Kembali ke Beranda</span>
             </a>
-            <img class="h-10 w-auto" src="{{ asset('images/bps-logo-full.png') }}" alt="BPS Batanghari">
+            <img class="h-20 w-auto" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU">
         </div>
     </header>
 

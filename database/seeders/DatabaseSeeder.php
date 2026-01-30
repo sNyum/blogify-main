@@ -15,11 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seed Admin users (guard: web)
+        $this->call(AdminSeeder::class);
+        
+        // Seed BPS Staff users (guard: bps, operator role)
+        $this->call(BpsStaffSeeder::class);
+        
+        // Seed External users (guard: external, OPD/Instansi role)
+        $this->call(ExternalUserSeeder::class);
     }
+
 }

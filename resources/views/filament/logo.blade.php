@@ -1,1 +1,1 @@
-<img src="{{ asset('images/bps-logo-icon.png') }}" alt="BPS Batanghari" class="h-12 w-auto">
+<img src="{{ asset('images/bistik-kaldu-footer-logo.png') }}" alt="BISTIK KALDU" class="h-16 w-auto">

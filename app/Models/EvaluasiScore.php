@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluasiScore extends Model
 {
-    protected $fillable = ['external_user_id', 'internal_user_id', 'domain', 'score_pm', 'score_pb', 'notes', 'evidence_link'];
+    protected $fillable = ['external_user_id', 'internal_user_id', 'domain', 'score_pm', 'score_pb', 'notes', 'evidence_link', 'nilai_pemeriksaan', 'catatan_pb'];
 
     public function user()
     {

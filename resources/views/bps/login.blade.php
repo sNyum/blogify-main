@@ -28,7 +28,7 @@
         <!-- Logo & Header -->
         <div class="text-center mb-8">
             <div class="flex justify-center items-center gap-3 mb-4">
-                <img src="{{ asset('images/bps-logo-icon.png') }}" alt="BPS Logo" class="h-16 w-auto">
+                <img src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU" class="h-24 w-auto">
             </div>
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Login Pengguna BPS</h1>
             <p class="text-gray-600">Pegawai BPS Kabupaten Batanghari</p>

@@ -12,11 +12,7 @@
     <!-- Header Dummy (Visual Only to match image roughly) -->
     <div class="bg-[#E65100] px-8 py-4 flex justify-between items-center text-white shadow-md">
         <div class="flex items-center gap-3">
-             <img class="h-10 w-auto bg-white rounded-full p-1" src="{{ asset('images/bps-logo-full.png') }}" alt="Logo">
-             <div class="leading-tight">
-                 <h1 class="font-bold text-lg">Bistik Kaldu</h1>
-                 <p class="text-xs">BPS Kabupaten Batang Hari</p>
-             </div>
+             <img class="h-12 w-auto" src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU">
         </div>
         <div class="hidden md:flex space-x-6 text-sm font-semibold">
             <span class="opacity-80">Pendaftaran</span>
@@ -32,12 +28,9 @@
     <div class="flex-1 flex items-center justify-center p-6">
         
         <div class="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md text-center transform hover:scale-105 transition duration-300">
-            <div class="flex justify-center mb-6">
-                <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo" class="h-24 w-auto drop-shadow-lg">
+            <div class="flex justify-center mb-8">
+                <img src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU" class="h-32 w-auto drop-shadow-lg">
             </div>
-            
-            <h2 class="text-2xl font-bold text-[#1A237E] mb-2 uppercase tracking-wide">BISTIK KALDU</h2>
-            <p class="text-[10px] text-gray-500 mb-8 uppercase font-bold tracking-widest">Pembinaan Statistik Sektoral Terpadu<br>Kabupaten Batang Hari</p>
 
             @if(session('error'))
                 <div class="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm font-bold">

@@ -8,18 +8,18 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
-            background: linear-gradient(135deg, #F15A24 0%, #D14A1A 100%);
+            background: linear-gradient(to-br, from-green-50 via-white to-green-50);
             min-height: 100vh;
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center p-4">
     <div class="w-full max-w-md">
         <!-- Card -->
         <div class="bg-white rounded-2xl shadow-2xl p-8">
             <!-- Logo/Header -->
             <div class="text-center mb-8">
-                <img src="{{ asset('images/bps-logo-full.png') }}" alt="Logo BPS" class="h-20 w-auto mx-auto mb-4">
+                <img src="{{ asset('images/bistik-kaldu-logo.png') }}" alt="BISTIK KALDU" class="h-24 w-auto mx-auto mb-4">
                 <h1 class="text-3xl font-bold text-gray-800">Login</h1>
             </div>
 
