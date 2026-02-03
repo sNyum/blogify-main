@@ -30,41 +30,37 @@ Sistem Informasi BPS Batang Hari adalah platform web terintegrasi yang dirancang
 
 ### 🔐 Multi-Role Authentication
 - **Admin**: Akses penuh ke seluruh sistem
-- **Petugas BPS (Operator)**: Mengelola permohonan data, live chat, dan konten
-- **Pengguna OPD**: Mengajukan permohonan data dan mengakses layanan publik
-
-### 📊 Dashboard Analisis Data Susenas
-- Upload dan parsing file SPSS (.sav)
-- Ekstraksi metadata variabel dan konteks dari PDF
-- Analisis statistik deskriptif (frekuensi, crosstab, mean, median)
-- Visualisasi data interaktif dengan Chart.js
-- Export hasil analisis ke PDF
-- Pencarian KBLI (Klasifikasi Baku Lapangan Usaha Indonesia)
+- **Petugas BPS (Operator)**: Mengelola konten, live chat, dan pengguna
+- **Pengguna Eksternal (OPD)**: Mengakses informasi dan layanan publik
 
 ### 🤖 AI Chatbot Terintegrasi
-- Powered by Google Gemini API
+- Powered by Google Gemini API dan OpenRouter
 - Pengetahuan mendalam tentang data BPS Batang Hari
 - Integrasi dengan BPS Web API untuk data real-time
 - Sistem feedback untuk peningkatan kualitas
 - Konteks percakapan yang persisten
+- Pencarian KBLI (Klasifikasi Baku Lapangan Usaha Indonesia)
 
 ### 💬 Live Chat Real-time
 - Broadcasting dengan Laravel Reverb (WebSocket)
 - Notifikasi instant untuk pesan baru
 - Panel moderasi untuk petugas BPS
 - Riwayat percakapan tersimpan
-
-### 📝 Sistem Permohonan Data
-- Form permohonan online dengan upload surat resmi
-- Tracking status permohonan
-- Notifikasi email otomatis
-- Manajemen persetujuan oleh petugas BPS
+- Canned responses untuk jawaban cepat
 
 ### 📰 Manajemen Konten
-- CRUD berita dengan rich text editor
-- Upload dan manajemen dokumen pustaka
+- **Berita**: CRUD berita dengan kategori dan tags
+- **Pustaka**: Upload dan manajemen dokumen publik
+- **Modul Sektoral**: Publikasi informasi sektoral dengan file pendukung
+- **Blog**: Sistem blog dengan kategori dan sub-kategori
+- Rich text editor untuk konten
 - Galeri foto dan media
-- Publikasi informasi sektoral
+
+### 👥 Manajemen Pengguna
+- Registrasi pengguna eksternal (OPD)
+- Profil pengguna dengan foto
+- Manajemen petugas BPS
+- Role-based access control dengan Filament Shield
 
 ---
 
@@ -204,54 +200,53 @@ npm run dev
 
 ## 🚀 Penggunaan
 
-### Untuk Pengguna OPD
+### Untuk Pengguna Eksternal
 
 1. **Registrasi Akun**
    - Klik "Daftar" di halaman utama
    - Isi data organisasi dan kontak
-   - Verifikasi email
+   - Login setelah registrasi
 
-2. **Mengajukan Permohonan Data**
-   - Login ke dashboard
-   - Pilih menu "Permohonan Data"
-   - Upload surat permohonan resmi (PDF)
-   - Isi detail data yang dibutuhkan
-   - Submit dan tunggu persetujuan
-
-3. **Menggunakan AI Chatbot**
+2. **Menggunakan AI Chatbot**
    - Klik ikon chat di pojok kanan bawah
    - Tanyakan informasi statistik Batang Hari
    - Contoh: "Berapa jumlah penduduk Batang Hari tahun 2024?"
+   - Berikan feedback untuk meningkatkan kualitas jawaban
 
-4. **Live Chat dengan Petugas**
-   - Akses menu "Konsultasi"
+3. **Live Chat dengan Petugas**
+   - Akses menu "Konsultasi" atau "Live Chat"
    - Kirim pesan ke petugas BPS
    - Dapatkan respons real-time
 
+4. **Akses Informasi Publik**
+   - Baca berita terbaru di menu "Berita"
+   - Download dokumen di "Pustaka"
+   - Lihat modul sektoral untuk informasi detail
+
 ### Untuk Petugas BPS
 
-1. **Mengelola Permohonan**
+1. **Moderasi Live Chat**
    - Login ke admin panel
-   - Buka "Permohonan Data"
-   - Review dan approve/reject permohonan
-   - Download surat permohonan
-
-2. **Moderasi Live Chat**
-   - Buka "Live Chat"
+   - Buka "Chat Conversations"
    - Lihat daftar percakapan aktif
-   - Balas pesan pengguna
+   - Balas pesan pengguna dengan canned responses atau custom message
    - Tandai percakapan selesai
 
-3. **Analisis Data Susenas**
-   - Upload file .sav di menu "Susenas Dashboard"
-   - Upload PDF konteks variabel (opsional)
-   - Pilih variabel untuk analisis
-   - Generate visualisasi dan export PDF
+2. **Manajemen Konten**
+   - **Berita**: Publikasi berita dengan kategori dan tags
+   - **Blog**: Kelola artikel blog
+   - **Pustaka**: Upload dokumen publik (PDF, Word, dll)
+   - **Modul Sektoral**: Upload modul dengan file pendukung
 
-4. **Manajemen Konten**
-   - Publikasi berita di menu "Berita"
-   - Upload dokumen di "Pustaka"
-   - Update informasi sektoral
+3. **Monitoring Chatbot**
+   - Review feedback chatbot di "Chatbot Feedback"
+   - Analisis pertanyaan yang sering ditanyakan
+   - Tingkatkan knowledge base chatbot
+
+4. **Manajemen Pengguna**
+   - Kelola pengguna eksternal di "External Users"
+   - Kelola petugas BPS di "BPS Staff"
+   - Atur role dan permissions
 
 ---
 
@@ -265,10 +260,11 @@ blogify-main/
 │   │   └── Controllers/   # Controllers untuk frontend
 │   ├── Models/            # Eloquent models
 │   ├── Services/          # Business logic services
-│   │   ├── AiChatbotService.php
+│   │   ├── GeminiService.php
+│   │   ├── OpenRouterService.php
 │   │   ├── BpsApiService.php
-│   │   ├── KBLISearchService.php
-│   │   └── SusenasDashboardService.php
+│   │   ├── BPSSearchService.php
+│   │   └── KBLISearchService.php
 │   ├── Events/            # Broadcasting events
 │   └── Policies/          # Authorization policies
 ├── config/
