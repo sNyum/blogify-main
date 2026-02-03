@@ -26,20 +26,6 @@ Sistem Informasi BPS Batang Hari adalah platform web terintegrasi yang dirancang
 
 ---
 
-## 📸 Screenshots
-
-<div align="center">
-
-### 🏠 Landing Page
-![Landing Page](public/images/docs/landing-page-preview.png)
-
-### 📊 Admin Dashboard
-![Admin Dashboard](public/images/docs/dashboard-preview.png)
-
-</div>
-
----
-
 ## ✨ Fitur Utama
 
 ### 🔐 Multi-Role Authentication
